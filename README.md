@@ -7,6 +7,20 @@ Go to the directoty of the installation using the command line.
 
 install with maven 3.3.*
 
-After installing go to the script folder and adapt the rights to run the ceopath.sh 
+After installing go to the script folder and adapt the rights to run the ceopath.sh
 
 This script prints the hiearchy, prints the pre, post and during state maps with the event classes and it shows how to call it to find the path between two event classes.
+
+Functions:
+
+1. print the class hiearchy
+
+java -Xmx812m -cp "$LIB/ceopathfinder-v0.1-jar-with-dependencies.jar" CeoPathFinder --ont-file "$RESOURCES/CEO_ESO.owl" --printTree > tree.txt
+
+2. print the pre, during and post condition states with the classes that have these conditions
+
+java -Xmx812m -cp "$LIB/ceopathfinder-v0.1-jar-with-dependencies.jar" CeoPathFinder --ont-file "$RESOURCES/CEO_ESO.owl" --printMap > map.txt
+
+3. find the circumstantial relation between two event classes
+
+java -Xmx812m -cp "$LIB/ceopathfinder-v0.1-jar-with-dependencies.jar" CeoPathFinder --ont-file "$RESOURCES/CEO_ESO.owl" --match 0 --e1 Fire --e2 ExtinguishingFire
