@@ -225,6 +225,7 @@ public class CeoPathFinder {
                 Statement statement = pI.next();
                 RDFNode object = statement.getObject();
                 String effect = getRuleEffect(object);
+
             }
         }
     }
@@ -473,7 +474,7 @@ public class CeoPathFinder {
             else if (arg.equals("--printMap")) {
                 printConditionMaps = true;
             }
-            else if (arg.equals("--printTree") && args.length>(i+1)) {
+            else if (arg.equals("--printTree")) {
                printHierarchy = true;
             }
         }
