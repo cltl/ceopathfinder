@@ -480,7 +480,7 @@ public class CeoPathFinder {
         CeoPathFinder ceoPathFinder = new CeoPathFinder();
         ceoPathFinder.readOwlFile(pathToOwlOntology);
         if (printHierarchy) {
-            ceoPathFinder.printOntology();
+            ceoPathFinder.printOntology("Physical");
         }
         if (printConditionMaps) {
             ceoPathFinder.readOntology("Physical");
