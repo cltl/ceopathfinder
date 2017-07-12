@@ -427,20 +427,22 @@ public class CeoPathFinder {
         ArrayList<String> dur2 = getDuringConditions(myClass2);
         for (int i = 0; i < pos1.size(); i++) {
             String p = pos1.get(i);
-            if (pre2.contains(p)) {
-                System.out.println("circumstantial post-pre = " + p);
-            }
-            else if (dur2.contains(p)) {
-                System.out.println("circumstantial post-dur = " + p);
+            if (!p.isEmpty()) {
+                if (pre2.contains(p)) {
+                    System.out.println("circumstantial post-pre = " + p);
+                } else if (dur2.contains(p)) {
+                    System.out.println("circumstantial post-dur = " + p);
+                }
             }
         }
         for (int i = 0; i < dur1.size(); i++) {
             String p = dur1.get(i);
-            if (pre2.contains(p)) {
-                System.out.println("circumstantial dur-pre = " + p);
-            }
-            else if (dur2.contains(p)) {
-                System.out.println("circumstantial dur-dur = " + p);
+            if (!p.isEmpty()) {
+                if (pre2.contains(p)) {
+                    System.out.println("circumstantial dur-pre = " + p);
+                } else if (dur2.contains(p)) {
+                    System.out.println("circumstantial dur-dur = " + p);
+                }
             }
         }
     }
@@ -456,6 +458,9 @@ public class CeoPathFinder {
         String match = "";
         boolean printConditionMaps = false;
         boolean printHierarchy = false;
+        e1 = "Fire";
+        e2 = "ExtinguishingFire";
+        match = "0";
         pathToOwlOntology = "//Users/piek/Desktop/CEO/CEO_ESO.owl";
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
