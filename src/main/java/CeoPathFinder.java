@@ -789,11 +789,13 @@ public class CeoPathFinder {
         boolean printConditionMaps = false;
         boolean printHierarchy = false;
         boolean printChain = false;
+/*
         e1 = "Fire";
         e2 = "Surgery";
-        match = "0";
+        match = "1";
         deep =true;
         pathToOwlOntology = "//Users/piek/Desktop/CEO/CEO_ESO.owl";
+*/
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
             if (arg.equals("--ont-file") && args.length>(i+1)) {
