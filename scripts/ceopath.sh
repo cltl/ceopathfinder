@@ -8,9 +8,9 @@ java -Xmx812m -cp "$LIB/ceopathfinder-v0.1-jar-with-dependencies.jar" CeoPathFin
 
 java -Xmx812m -cp "$LIB/ceopathfinder-v0.1-jar-with-dependencies.jar" CeoPathFinder --ont-file "$RESOURCES/CEO_ESO.owl" --printMap > map.txt
 
-java -Xmx812m -cp "$LIB/ceopathfinder-v0.1-jar-with-dependencies.jar" CeoPathFinder --ont-file "$RESOURCES/CEO_ESO.owl" --match 0 --e1 Fire --e2 ExtinguishingFire
-
 java -Xmx812m -cp "$LIB/ceopathfinder-v0.1-jar-with-dependencies.jar" CeoPathFinder --ont-file "$RESOURCES/CEO_ESO.owl" --printChain > chain.txt
+
+java -Xmx812m -cp "$LIB/ceopathfinder-v0.1-jar-with-dependencies.jar" CeoPathFinder --ont-file "$RESOURCES/CEO_ESO.owl" --deep --match 0 --e1 Fire --e2 Surgery >  two.events.txt
 
 # special parameters can be used in combination with the function for comparing two events:
 # --deep pre, during and post conditions are inherited along the type hierarchy from top to bottom
