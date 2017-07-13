@@ -24,6 +24,8 @@ public class CeoPathFinder {
     private HashMap<String, ArrayList<String>> classPreMap;
     private HashMap<String, ArrayList<String>> classDurMap;
     private HashMap<String, ArrayList<String>> classPosMap;
+    static boolean during = false;
+    static boolean deep = false;
 
     private OntModel ontologyModel;
 
@@ -99,8 +101,7 @@ public class CeoPathFinder {
         }
     }
 
-
-    public void readHierarchy (OntClass ontClass) {
+    public void interpretOntology (OntClass ontClass) {
         StmtIterator pI = ontClass.listProperties();
         while (pI.hasNext()) {
             Statement statement = pI.next();
@@ -112,13 +113,14 @@ public class CeoPathFinder {
 
                 if (valueStatement != null) {
                     RDFNode valueNode = valueStatement.getObject();
-                    if (valueNode instanceof Resource) {
-                        storeRuleEffect(valueNode.asResource(), ontClass.getLocalName());
-                    } else {
-                        // object is a literal
-                        System.out.println("Literal: \"" + object.toString() + "\"");
+                    if (!ontClass.getLocalName().isEmpty()) {
+                        if (valueNode instanceof Resource) {
+                            storeRuleEffect(valueNode.asResource(), ontClass.getLocalName());
+                        } else {
+                            // object is a literal
+                            System.out.println("Literal: \"" + object.toString() + "\"");
+                        }
                     }
-
                 }
             }
 
@@ -126,7 +128,38 @@ public class CeoPathFinder {
         // Go deep
         for (Iterator j = ontClass.listSubClasses(); j.hasNext();) {
             OntClass c = (OntClass) j.next();
-            readHierarchy(c);
+            interpretOntology(c);
+        }
+    }
+
+    public void interpretOntology (OntClass ontClass, ArrayList<String> superEffects) {
+        StmtIterator pI = ontClass.listProperties();
+        while (pI.hasNext()) {
+            Statement statement = pI.next();
+            RDFNode object = statement.getObject();
+            if (object.isAnon()) {
+                /// Restriction is a blank node
+                Property predicate = object.getModel().createProperty(owl, "hasValue");
+                Statement valueStatement = object.asResource().getProperty(predicate);
+
+                if (valueStatement != null) {
+                    RDFNode valueNode = valueStatement.getObject();
+                    if (!ontClass.getLocalName().isEmpty()) {
+                        if (valueNode instanceof Resource) {
+                            storeRuleEffect(valueNode.asResource(), ontClass.getLocalName(), superEffects);
+                        } else {
+                            // object is a literal
+                            System.out.println("Literal: \"" + object.toString() + "\"");
+                        }
+                    }
+                }
+            }
+
+        }
+        // Go deep
+        for (Iterator j = ontClass.listSubClasses(); j.hasNext();) {
+            OntClass c = (OntClass) j.next();
+            interpretOntology(c, superEffects);
         }
     }
 
@@ -140,7 +173,7 @@ public class CeoPathFinder {
                 Statement statement = pI.next();
                 RDFNode object = statement.getObject();
                 String effect = getRuleEffect(object);
-                if (!effects.contains(effect)) {
+                if (!effects.contains(effect) && !effect.isEmpty()) {
                     effects.add(effect);
                 }
             }
@@ -150,6 +183,102 @@ public class CeoPathFinder {
 
     public void storeRuleEffect (RDFNode rdfNode, String className) {
         ArrayList<String> effects = getRuleEffects(rdfNode);
+        if (!effects.isEmpty()) {
+            for (int i = 0; i < effects.size(); i++) {
+                String effect = effects.get(i);
+                if (!effect.isEmpty()) {
+                    if (rdfNode.toString().indexOf("#post_") > -1) {
+                        if (posMap.containsKey(effect)) {
+                            ArrayList<String> classNames = posMap.get(effect);
+                            if (!classNames.contains(className)) {
+                                classNames.add(className);
+                                posMap.put(effect, classNames);
+                            }
+                        } else {
+                            ArrayList<String> classNames = new ArrayList<String>();
+                            classNames.add(className);
+                            posMap.put(effect, classNames);
+                        }
+                        if (classPosMap.containsKey(className)) {
+                            ArrayList<String> classEffects = classPosMap.get(className);
+                            for (int j = 0; j < effects.size(); j++) {
+                                String e = effects.get(j);
+                                if (!classEffects.contains(e)) {
+                                    classEffects.add(e);
+                                }
+                            }
+                            classPosMap.put(className, classEffects);
+                        }
+                        else {
+                            classPosMap.put(className, effects);
+                        }
+                    }
+                    else if (rdfNode.toString().indexOf("#pre_") > -1) {
+                        if (preMap.containsKey(effect)) {
+                            ArrayList<String> classNames = preMap.get(effect);
+                            if (!classNames.contains(className)) {
+                                classNames.add(className);
+                                preMap.put(effect, classNames);
+                            }
+                        } else {
+                            ArrayList<String> classNames = new ArrayList<String>();
+                            classNames.add(className);
+                            preMap.put(effect, classNames);
+                        }
+                        if (classPreMap.containsKey(className)) {
+                            ArrayList<String> classEffects = classPreMap.get(className);
+                            for (int j = 0; j < effects.size(); j++) {
+                                String e = effects.get(j);
+                                if (!classEffects.contains(e)) {
+                                    classEffects.add(e);
+                                }
+                            }
+                            classPreMap.put(className, classEffects);
+                        }
+                        else {
+                            classPreMap.put(className, effects);
+                        }
+                    }
+                    else if (rdfNode.toString().indexOf("#during_") > -1) {
+                        if (durMap.containsKey(effect)) {
+                            ArrayList<String> classNames = durMap.get(effect);
+                            if (!classNames.contains(className)) {
+                                classNames.add(className);
+                                durMap.put(effect, classNames);
+                            }
+                        } else {
+                            ArrayList<String> classNames = new ArrayList<String>();
+                            classNames.add(className);
+                            durMap.put(effect, classNames);
+                        }
+                        if (classDurMap.containsKey(className)) {
+                            ArrayList<String> classEffects = classDurMap.get(className);
+                            for (int j = 0; j < effects.size(); j++) {
+                                String e = effects.get(j);
+                                if (!classEffects.contains(e)) {
+                                    classEffects.add(e);
+                                }
+                            }
+                            classDurMap.put(className, classEffects);
+                        }
+                        else {
+                            classDurMap.put(className, effects);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void storeRuleEffect (RDFNode rdfNode, String className, ArrayList<String> supereffects) {
+        ArrayList<String> effects = getRuleEffects(rdfNode);
+        for (int i = 0; i < effects.size(); i++) {
+            String e = effects.get(i);
+            if (!supereffects.contains(e)) {
+                supereffects.add(e);
+            }
+        }
+        effects.addAll(supereffects);
         if (!effects.isEmpty()) {
             for (int i = 0; i < effects.size(); i++) {
                 String effect = effects.get(i);
@@ -371,9 +500,15 @@ public class CeoPathFinder {
         printHierarchy(myClass, 0);
     }
 
-    public void readOntology (String classString) {
+    public void interpretOntology (String classString) {
         OntClass myClass = ontologyModel.getOntClass(nwr+classString);
-        readHierarchy(myClass);
+        interpretOntology(myClass);
+    }
+
+    public void interpretOntologyWithInheritance (String classString) {
+        OntClass myClass = ontologyModel.getOntClass(nwr+classString);
+        ArrayList<String> supereffects = new ArrayList<String>();
+        interpretOntology(myClass,supereffects);
     }
 
     public ArrayList<String> getPostConditions (OntClass myClass) {
@@ -466,10 +601,7 @@ public class CeoPathFinder {
     public void checkEventsDirect (String event1, String event2) {
         System.out.println("event1 = " + event1);
         System.out.println("event2 = " + event2);
-/*
-        OntClass myClass1 = ontologyModel.getOntClass(nwr+event1);
-        OntClass myClass2 = ontologyModel.getOntClass(nwr+event2);
-*/
+        System.out.println("=====================");
         ArrayList<String> pos1 = new ArrayList<String>();
         ArrayList<String> dur1 = new ArrayList<String>();
         ArrayList<String> pre2 = new ArrayList<String>();
@@ -478,12 +610,7 @@ public class CeoPathFinder {
         if (classDurMap.containsKey(event1)) dur1 = classDurMap.get(event1);
         if (classPreMap.containsKey(event2)) pre2 = classPreMap.get(event2);
         if (classDurMap.containsKey(event2)) dur2 = classDurMap.get(event2);
-/*
-        ArrayList<String> pos1 = getPostConditions(myClass1);
-        ArrayList<String> dur1 = getDuringConditions(myClass1);
-        ArrayList<String> pre2 = getPreConditions(myClass2);
-        ArrayList<String> dur2 = getDuringConditions(myClass2);
-*/
+
 
         for (int i = 0; i < pos1.size(); i++) {
             String p = pos1.get(i);
@@ -495,13 +622,119 @@ public class CeoPathFinder {
                 }
             }
         }
-        for (int i = 0; i < dur1.size(); i++) {
-            String p = dur1.get(i);
-            if (!p.isEmpty()) {
-                if (pre2.contains(p)) {
-                    System.out.println("circumstantial dur-pre = " + p);
-                } else if (dur2.contains(p)) {
-                    System.out.println("circumstantial dur-dur = " + p);
+
+        if (during) {
+            for (int i = 0; i < dur1.size(); i++) {
+                String p = dur1.get(i);
+                if (!p.isEmpty()) {
+                    if (pre2.contains(p)) {
+                        System.out.println("circumstantial dur-pre = " + p);
+                    } else if (dur2.contains(p)) {
+                        System.out.println("circumstantial dur-dur = " + p);
+                    }
+                }
+            }
+        }
+    }
+    
+    public void checkEventsInDirect (String event1, String event2) {
+        System.out.println("event1 = " + event1);
+        System.out.println("event2 = " + event2);
+        System.out.println("=====================");
+        ArrayList<String> pos1 = new ArrayList<String>();
+        ArrayList<String> dur1 = new ArrayList<String>();
+        ArrayList<String> pre2 = new ArrayList<String>();
+        ArrayList<String> dur2 = new ArrayList<String>();
+        if (classPosMap.containsKey(event1)) pos1 = classPosMap.get(event1);
+        if (classDurMap.containsKey(event1)) dur1 = classDurMap.get(event1);
+        if (classPreMap.containsKey(event2)) pre2 = classPreMap.get(event2);
+        if (classDurMap.containsKey(event2)) dur2 = classDurMap.get(event2);
+        /// We start from the pre conditions of the last event and reason back, considering this as a bridge condition
+        for (int i = 0; i < pre2.size(); i++) {
+            String bridgeCondition = pre2.get(i);
+            if (posMap.containsKey(bridgeCondition)) {
+                //// get all classes that have the bridgeCondition as a post condition
+                ArrayList<String> postClasses = posMap.get(bridgeCondition);
+                for (int j = 0; j < postClasses.size(); j++) {
+                    String postClass = postClasses.get(j);
+                    if (!postClass.equals(event1)) {
+                        if (classPreMap.containsKey(postClass)) {
+                            /// the postClass has preconditions,
+                            // we are going to check if any of these is a post condition of event1
+                            ArrayList<String> preConditions = classPreMap.get(postClass);
+                            for (int k = 0; k < preConditions.size(); k++) {
+                                String preConditionPostclass = preConditions.get(k);
+                                if (pos1.contains(preConditionPostclass)) {
+                                    System.out.println("\nevent1 = " + event1);
+                                    System.out.println("post event 1 pre bridge condition = " + preConditionPostclass);
+                                    System.out.println("bridging event = " + postClass);
+                                    System.out.println("post bridge pre event2 bridgeCondition = " + bridgeCondition);
+                                    System.out.println("event2 = " + event2);
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        //// this is event1 and therefore a direct mapping
+                    }
+                }
+            }
+        }
+        if (during) {
+            /// in the next loop we consider during relations of the last event2 and reason back
+            for (int i = 0; i < dur2.size(); i++) {
+                String bridgeCondition = dur2.get(i);
+                if (posMap.containsKey(bridgeCondition)) {
+                    //// get all classes that have the bridgeCondition as a post condition
+                    ArrayList<String> postClasses = posMap.get(bridgeCondition);
+                    for (int j = 0; j < postClasses.size(); j++) {
+                        String postClass = postClasses.get(j);
+                        if (!postClass.equals(event1)) {
+                            if (classPreMap.containsKey(postClass)) {
+                                ArrayList<String> preConditions = classPreMap.get(postClass);
+                                for (int k = 0; k < preConditions.size(); k++) {
+                                    String preConditionPostclass = preConditions.get(k);
+                                    if (pos1.contains(preConditionPostclass)) {
+                                        System.out.println("\nevent1 = " + event1);
+                                        System.out.println("post event 1 pre bridge condition = " + preConditionPostclass);
+                                        System.out.println("bridging event = " + postClass);
+                                        System.out.println("post bridge during event2 bridgeCondition = " + bridgeCondition);
+                                        System.out.println("event2 = " + event2);
+                                    }
+                                }
+                            }
+                        } else {
+                            //// this is event1 and therefore a direct mapping
+                        }
+                    }
+                }
+            }
+            /// in the next loop we consider during relations of event1 when we reason back from pre conditions of event2
+            for (int i = 0; i < pre2.size(); i++) {
+                String bridgeCondition = pre2.get(i);
+                if (posMap.containsKey(bridgeCondition)) {
+                    //// get all classes that have the bridgeCondition as a post condition
+                    ArrayList<String> postClasses = posMap.get(bridgeCondition);
+                    for (int j = 0; j < postClasses.size(); j++) {
+                        String postClass = postClasses.get(j);
+                        if (!postClass.equals(event1)) {
+                            if (classPreMap.containsKey(postClass)) {
+                                ArrayList<String> preConditions = classPreMap.get(postClass);
+                                for (int k = 0; k < preConditions.size(); k++) {
+                                    String preConditionPostclass = preConditions.get(k);
+                                    if (dur1.contains(preConditionPostclass)) {
+                                        System.out.println("\nevent1 = " + event1);
+                                        System.out.println("during event 1 pre bridge condition = " + preConditionPostclass);
+                                        System.out.println("bridging event = " + postClass);
+                                        System.out.println("post bridge pre event2 bridgeCondition = " + bridgeCondition);
+                                        System.out.println("event2 = " + event2);
+                                    }
+                                }
+                            }
+                        } else {
+                            //// this is event1 and therefore a direct mapping
+                        }
+                    }
                 }
             }
         }
@@ -555,10 +788,11 @@ public class CeoPathFinder {
         String match = "";
         boolean printConditionMaps = false;
         boolean printHierarchy = false;
-        boolean printChain = true;
+        boolean printChain = false;
         e1 = "Fire";
-        e2 = "ExtinguishingFire";
+        e2 = "Surgery";
         match = "0";
+        deep =true;
         pathToOwlOntology = "//Users/piek/Desktop/CEO/CEO_ESO.owl";
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
@@ -583,24 +817,36 @@ public class CeoPathFinder {
             else if (arg.equals("--printChain")) {
                 printChain = true;
             }
+            else if (arg.equals("--deep")) {
+                deep = true;
+            }
+            else if (arg.equals("--during")) {
+                during = true;
+            }
         }
         CeoPathFinder ceoPathFinder = new CeoPathFinder();
         ceoPathFinder.readOwlFile(pathToOwlOntology);
+        if (deep) {
+            ceoPathFinder.interpretOntologyWithInheritance("Physical");
+        }
+        else {
+            ceoPathFinder.interpretOntology("Physical");
+        }
         if (printHierarchy) {
             ceoPathFinder.printOntology("Physical");
         }
         if (printConditionMaps) {
-            ceoPathFinder.readOntology("Physical");
             ceoPathFinder.printHashMaps();
         }
         if (printChain) {
-            ceoPathFinder.readOntology("Physical");
             ceoPathFinder.checkMaps();
         }
         if (!e1.isEmpty() && !e2.isEmpty()) {
-            ceoPathFinder.readOntology("Physical");
             if (match.equalsIgnoreCase("0")) {
                 ceoPathFinder.checkEventsDirect(e1, e2);
+            }
+            else if (match.equalsIgnoreCase("1")) {
+                ceoPathFinder.checkEventsInDirect(e1, e2);
             }
         }
         ceoPathFinder.close();

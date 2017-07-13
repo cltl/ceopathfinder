@@ -28,3 +28,10 @@ java -Xmx812m -cp "$LIB/ceopathfinder-v0.1-jar-with-dependencies.jar" CeoPathFin
 4. generate all possible inference chains starting from post-situations and map these to during and pre-situations
 
  java -Xmx812m -cp "$LIB/ceopathfinder-v0.1-jar-with-dependencies.jar" CeoPathFinder --ont-file "$RESOURCES/CEO_ESO.owl" --printChain > chain.txt
+
+
+Some parameters:
+
+--deep inherits constraints through the type hierarchy to all children
+--during also during conditions are considered as post conditions of the firs event and pre conditions of the second event
+--match [0,1] value 0 means direct match, value 1 looks for 1 connecting event for two events that are compared
