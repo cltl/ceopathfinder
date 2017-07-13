@@ -24,3 +24,7 @@ java -Xmx812m -cp "$LIB/ceopathfinder-v0.1-jar-with-dependencies.jar" CeoPathFin
 3. find the circumstantial relation between two event classes
 
 java -Xmx812m -cp "$LIB/ceopathfinder-v0.1-jar-with-dependencies.jar" CeoPathFinder --ont-file "$RESOURCES/CEO_ESO.owl" --match 0 --e1 Fire --e2 ExtinguishingFire
+
+4. generate all possible inference chains starting from post-situations and map these to during and pre-situations
+
+ java -Xmx812m -cp "$LIB/ceopathfinder-v0.1-jar-with-dependencies.jar" CeoPathFinder --ont-file "$RESOURCES/CEO_ESO.owl" --printChain > chain.txt

@@ -21,6 +21,9 @@ public class CeoPathFinder {
     private HashMap<String, ArrayList<String>> preMap;
     private HashMap<String, ArrayList<String>> durMap;
     private HashMap<String, ArrayList<String>> posMap;
+    private HashMap<String, ArrayList<String>> classPreMap;
+    private HashMap<String, ArrayList<String>> classDurMap;
+    private HashMap<String, ArrayList<String>> classPosMap;
 
     private OntModel ontologyModel;
 
@@ -48,6 +51,9 @@ public class CeoPathFinder {
          preMap = new HashMap<String, ArrayList<String>>();
          posMap = new HashMap<String, ArrayList<String>>();
          durMap = new HashMap<String, ArrayList<String>>();
+         classPreMap = new HashMap<String, ArrayList<String>>();
+         classPosMap = new HashMap<String, ArrayList<String>>();
+         classDurMap = new HashMap<String, ArrayList<String>>();
     }
 
     public void readOwlFile (String pathToOwlFile) {
@@ -160,7 +166,21 @@ public class CeoPathFinder {
                             classNames.add(className);
                             posMap.put(effect, classNames);
                         }
-                    } else if (rdfNode.toString().indexOf("#pre_") > -1) {
+                        if (classPosMap.containsKey(className)) {
+                            ArrayList<String> classEffects = classPosMap.get(className);
+                            for (int j = 0; j < effects.size(); j++) {
+                                String e = effects.get(j);
+                                if (!classEffects.contains(e)) {
+                                    classEffects.add(e);
+                                }
+                            }
+                            classPosMap.put(className, classEffects);
+                        }
+                        else {
+                            classPosMap.put(className, effects);
+                        }
+                    }
+                    else if (rdfNode.toString().indexOf("#pre_") > -1) {
                         if (preMap.containsKey(effect)) {
                             ArrayList<String> classNames = preMap.get(effect);
                             if (!classNames.contains(className)) {
@@ -172,7 +192,21 @@ public class CeoPathFinder {
                             classNames.add(className);
                             preMap.put(effect, classNames);
                         }
-                    } else if (rdfNode.toString().indexOf("#during_") > -1) {
+                        if (classPreMap.containsKey(className)) {
+                            ArrayList<String> classEffects = classPreMap.get(className);
+                            for (int j = 0; j < effects.size(); j++) {
+                                String e = effects.get(j);
+                                if (!classEffects.contains(e)) {
+                                    classEffects.add(e);
+                                }
+                            }
+                            classPreMap.put(className, classEffects);
+                        }
+                        else {
+                            classPreMap.put(className, effects);
+                        }
+                    }
+                    else if (rdfNode.toString().indexOf("#during_") > -1) {
                         if (durMap.containsKey(effect)) {
                             ArrayList<String> classNames = durMap.get(effect);
                             if (!classNames.contains(className)) {
@@ -183,6 +217,19 @@ public class CeoPathFinder {
                             ArrayList<String> classNames = new ArrayList<String>();
                             classNames.add(className);
                             durMap.put(effect, classNames);
+                        }
+                        if (classDurMap.containsKey(className)) {
+                            ArrayList<String> classEffects = classDurMap.get(className);
+                            for (int j = 0; j < effects.size(); j++) {
+                                String e = effects.get(j);
+                                if (!classEffects.contains(e)) {
+                                    classEffects.add(e);
+                                }
+                            }
+                            classDurMap.put(className, classEffects);
+                        }
+                        else {
+                            classDurMap.put(className, effects);
                         }
                     }
                 }
@@ -419,12 +466,25 @@ public class CeoPathFinder {
     public void checkEventsDirect (String event1, String event2) {
         System.out.println("event1 = " + event1);
         System.out.println("event2 = " + event2);
+/*
         OntClass myClass1 = ontologyModel.getOntClass(nwr+event1);
         OntClass myClass2 = ontologyModel.getOntClass(nwr+event2);
+*/
+        ArrayList<String> pos1 = new ArrayList<String>();
+        ArrayList<String> dur1 = new ArrayList<String>();
+        ArrayList<String> pre2 = new ArrayList<String>();
+        ArrayList<String> dur2 = new ArrayList<String>();
+        if (classPosMap.containsKey(event1)) pos1 = classPosMap.get(event1);
+        if (classDurMap.containsKey(event1)) dur1 = classDurMap.get(event1);
+        if (classPreMap.containsKey(event2)) pre2 = classPreMap.get(event2);
+        if (classDurMap.containsKey(event2)) dur2 = classDurMap.get(event2);
+/*
         ArrayList<String> pos1 = getPostConditions(myClass1);
         ArrayList<String> dur1 = getDuringConditions(myClass1);
         ArrayList<String> pre2 = getPreConditions(myClass2);
         ArrayList<String> dur2 = getDuringConditions(myClass2);
+*/
+
         for (int i = 0; i < pos1.size(); i++) {
             String p = pos1.get(i);
             if (!p.isEmpty()) {
@@ -447,9 +507,46 @@ public class CeoPathFinder {
         }
     }
 
+
+    public void checkMaps () {
+        Set keySetPre = posMap.keySet();
+        Iterator<String> pos = keySetPre.iterator();
+        while (pos.hasNext()) {
+            String p = pos.next();
+            ArrayList<String> postClasses = posMap.get(p);
+            if (preMap.containsKey(p)) {
+                ArrayList<String> preClasses = preMap.get(p);
+                for (int i = 0; i < postClasses.size(); i++) {
+                    String pClass = postClasses.get(i);
+                    String str = pClass+" with post-situation: "+p+", can result in pre-situations:";
+                    for (int j = 0; j < preClasses.size(); j++) {
+                        String preClass = preClasses.get(j);
+                        str += preClass+";";
+                    }
+                    System.out.println(str);
+                }
+            }
+            else if (durMap.containsKey(p)) {
+                ArrayList<String> durClasses = durMap.get(p);
+                for (int i = 0; i < postClasses.size(); i++) {
+                    String pClass = postClasses.get(i);
+                    String str = pClass+" with post-situation: "+p+", can result in during-situations:";
+                    for (int j = 0; j < durClasses.size(); j++) {
+                        String durClass = durClasses.get(j);
+                        str += durClass+";";
+                    }
+                    System.out.println(str);
+                }
+            }
+
+        }
+    }
+
     public void close () {
         ontologyModel.close();
     }
+
+
 
     static public void main (String [] args) {
         String pathToOwlOntology = "";
@@ -458,6 +555,7 @@ public class CeoPathFinder {
         String match = "";
         boolean printConditionMaps = false;
         boolean printHierarchy = false;
+        boolean printChain = true;
         e1 = "Fire";
         e2 = "ExtinguishingFire";
         match = "0";
@@ -482,6 +580,9 @@ public class CeoPathFinder {
             else if (arg.equals("--printTree")) {
                printHierarchy = true;
             }
+            else if (arg.equals("--printChain")) {
+                printChain = true;
+            }
         }
         CeoPathFinder ceoPathFinder = new CeoPathFinder();
         ceoPathFinder.readOwlFile(pathToOwlOntology);
@@ -491,6 +592,10 @@ public class CeoPathFinder {
         if (printConditionMaps) {
             ceoPathFinder.readOntology("Physical");
             ceoPathFinder.printHashMaps();
+        }
+        if (printChain) {
+            ceoPathFinder.readOntology("Physical");
+            ceoPathFinder.checkMaps();
         }
         if (!e1.isEmpty() && !e2.isEmpty()) {
             ceoPathFinder.readOntology("Physical");
