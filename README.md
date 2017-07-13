@@ -5,9 +5,17 @@ Assume Java and Maven 3.3.* installed
 
 Go to the directoty of the installation using the command line.
 
-install with maven 3.3.*
+install with maven 3.3.* using:
 
-After installing go to the script folder and adapt the rights to run the ceopath.sh
+> mv install
+
+After installing go to the script folder and adapt the rights to run the ceopath.sh:
+
+> chmod +wrx ceopath.sh
+
+Run the script from the scripts folder:
+
+> ./ceopath
 
 This script prints the hiearchy, prints the pre, post and during state maps with the event classes and it shows how to call it to find the path between two event classes.
 
