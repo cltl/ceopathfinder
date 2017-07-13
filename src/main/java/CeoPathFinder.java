@@ -6,6 +6,7 @@ import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.util.iterator.Filter;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -825,6 +826,9 @@ public class CeoPathFinder {
             else if (arg.equals("--during")) {
                 during = true;
             }
+        }
+        if (!new File(pathToOwlOntology).exists()) {
+            System.out.println("cannot find pathToOwlOntology = " + pathToOwlOntology);
         }
         CeoPathFinder ceoPathFinder = new CeoPathFinder();
         ceoPathFinder.readOwlFile(pathToOwlOntology);
