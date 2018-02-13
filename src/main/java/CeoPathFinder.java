@@ -48,6 +48,10 @@ public class CeoPathFinder {
         return q;
     }*/
 
+/*
+
+ */
+
     public CeoPathFinder() {
          ontologyModel =
                 ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM, null);
@@ -59,8 +63,20 @@ public class CeoPathFinder {
          classDurMap = new HashMap<String, ArrayList<String>>();
     }
 
+    public static boolean isDuring() {
+        return during;
+    }
+
+    public static void setDuring(boolean during) {
+        CeoPathFinder.during = during;
+    }
+
     public void readOwlFile (String pathToOwlFile) {
         InputStream in = FileManager.get().open(pathToOwlFile);
+        File owlFile = new File(pathToOwlFile);
+        if (!owlFile.exists()) {
+            System.out.println("Cannot find pathToOwlFile = " + pathToOwlFile);
+        }
         ontologyModel.read(in, "RDF/XML-ABBREV");
     }
 
@@ -599,6 +615,144 @@ public class CeoPathFinder {
         return conditions;
     }
 
+    public Integer countEventMatchesDirect (String event1, String event2) {
+        Integer matchCount = 0;
+        ArrayList<String> pos1 = new ArrayList<String>();
+        ArrayList<String> dur1 = new ArrayList<String>();
+        ArrayList<String> pre2 = new ArrayList<String>();
+        ArrayList<String> dur2 = new ArrayList<String>();
+        if (classPosMap.containsKey(event1)) pos1 = classPosMap.get(event1);
+        if (classDurMap.containsKey(event1)) dur1 = classDurMap.get(event1);
+        if (classPreMap.containsKey(event2)) pre2 = classPreMap.get(event2);
+        if (classDurMap.containsKey(event2)) dur2 = classDurMap.get(event2);
+
+/*
+        System.out.println("event1 = " + event1);
+        System.out.println("event2 = " + event2);
+        System.out.println("pos1.size() = " + pos1.size());
+        System.out.println("dur1.size() = " + dur1.size());
+        System.out.println("pre2.size() = " + pre2.size());
+        System.out.println("dur2.size() = " + dur2.size());
+*/
+
+        for (int i = 0; i < pos1.size(); i++) {
+            String p = pos1.get(i);
+            if (!p.isEmpty()) {
+                if (pre2.contains(p)) {
+                    matchCount++;
+                } else if (dur2.contains(p)) {
+                   matchCount++;
+                }
+            }
+        }
+
+        if (during) {
+            for (int i = 0; i < dur1.size(); i++) {
+                String p = dur1.get(i);
+                if (!p.isEmpty()) {
+                    if (pre2.contains(p)) {
+                       matchCount++;
+                    } else if (dur2.contains(p)) {
+                       matchCount++;
+                    }
+                }
+            }
+        }
+       // System.out.println("matchCount = " + matchCount);
+        return matchCount;
+    }
+
+    public Integer countEventMatchesInDirect (String event1, String event2) {
+        Integer matchCount = 0;
+
+        ArrayList<String> pos1 = new ArrayList<String>();
+        ArrayList<String> dur1 = new ArrayList<String>();
+        ArrayList<String> pre2 = new ArrayList<String>();
+        ArrayList<String> dur2 = new ArrayList<String>();
+        if (classPosMap.containsKey(event1)) pos1 = classPosMap.get(event1);
+        if (classDurMap.containsKey(event1)) dur1 = classDurMap.get(event1);
+        if (classPreMap.containsKey(event2)) pre2 = classPreMap.get(event2);
+        if (classDurMap.containsKey(event2)) dur2 = classDurMap.get(event2);
+        /// We start from the pre conditions of the last event and reason back, considering this as a bridge condition
+        for (int i = 0; i < pre2.size(); i++) {
+            String bridgeCondition = pre2.get(i);
+            if (posMap.containsKey(bridgeCondition)) {
+                //// get all classes that have the bridgeCondition as a post condition
+                ArrayList<String> postClasses = posMap.get(bridgeCondition);
+                for (int j = 0; j < postClasses.size(); j++) {
+                    String postClass = postClasses.get(j);
+                    if (!postClass.equals(event1)) {
+                        if (classPreMap.containsKey(postClass)) {
+                            /// the postClass has preconditions,
+                            // we are going to check if any of these is a post condition of event1
+                            ArrayList<String> preConditions = classPreMap.get(postClass);
+                            for (int k = 0; k < preConditions.size(); k++) {
+                                String preConditionPostclass = preConditions.get(k);
+                                if (pos1.contains(preConditionPostclass)) {
+                                    matchCount++;
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        //// this is event1 and therefore a direct mapping
+                    }
+                }
+            }
+        }
+        if (during) {
+            /// in the next loop we consider during relations of the last event2 and reason back
+            for (int i = 0; i < dur2.size(); i++) {
+                String bridgeCondition = dur2.get(i);
+                if (posMap.containsKey(bridgeCondition)) {
+                    //// get all classes that have the bridgeCondition as a post condition
+                    ArrayList<String> postClasses = posMap.get(bridgeCondition);
+                    for (int j = 0; j < postClasses.size(); j++) {
+                        String postClass = postClasses.get(j);
+                        if (!postClass.equals(event1)) {
+                            if (classPreMap.containsKey(postClass)) {
+                                ArrayList<String> preConditions = classPreMap.get(postClass);
+                                for (int k = 0; k < preConditions.size(); k++) {
+                                    String preConditionPostclass = preConditions.get(k);
+                                    if (pos1.contains(preConditionPostclass)) {
+                                        matchCount++;
+                                    }
+                                }
+                            }
+                        } else {
+                            //// this is event1 and therefore a direct mapping
+                        }
+                    }
+                }
+            }
+            /// in the next loop we consider during relations of event1 when we reason back from pre conditions of event2
+            for (int i = 0; i < pre2.size(); i++) {
+                String bridgeCondition = pre2.get(i);
+                if (posMap.containsKey(bridgeCondition)) {
+                    //// get all classes that have the bridgeCondition as a post condition
+                    ArrayList<String> postClasses = posMap.get(bridgeCondition);
+                    for (int j = 0; j < postClasses.size(); j++) {
+                        String postClass = postClasses.get(j);
+                        if (!postClass.equals(event1)) {
+                            if (classPreMap.containsKey(postClass)) {
+                                ArrayList<String> preConditions = classPreMap.get(postClass);
+                                for (int k = 0; k < preConditions.size(); k++) {
+                                    String preConditionPostclass = preConditions.get(k);
+                                    if (dur1.contains(preConditionPostclass)) {
+                                        matchCount++;
+                                    }
+                                }
+                            }
+                        } else {
+                            //// this is event1 and therefore a direct mapping
+                        }
+                    }
+                }
+            }
+        }
+        return matchCount;
+    }
+
     public void checkEventsDirect (String event1, String event2) {
         System.out.println("event1 = " + event1);
         System.out.println("event2 = " + event2);
@@ -776,9 +930,33 @@ public class CeoPathFinder {
         }
     }
 
+    public Integer pathForTypes (ArrayList<String> mention1Types, ArrayList<String> mention2Types) {
+        Integer bestPath = 0;
+        for (int i = 0; i < mention1Types.size(); i++) {
+            String m1Type = mention1Types.get(i);
+            for (int j = 0; j < mention2Types.size(); j++) {
+                String m2Type = mention2Types.get(j);
+                Integer m1m2Direct = countEventMatchesDirect(m1Type, m2Type);
+                Integer m1m2InDirect = countEventMatchesInDirect(m1Type, m2Type);
+                Integer path = m1m2Direct+m1m2InDirect;
+                if (path>bestPath) {
+                    bestPath = path;
+                }
+            }
+        }
+        return bestPath;
+    }
+
     public void close () {
         ontologyModel.close();
     }
+
+    static String testparameter = "--e1 Fire --e2 Surgery --match 2 --printTree " +
+            "--ont-file /Users/piek/Desktop/Roxane/CEO.v1.0/CEO_version_1.owl";
+/*
+    static String testparameter = "--e1 Fire --e2 Surgery --match 2 --printTree " +
+            "--ont-file /Users/piek/Desktop/Roxane/CEO.v0.7/CEO_version_07.owl";
+*/
 
 
 
@@ -790,13 +968,10 @@ public class CeoPathFinder {
         boolean printConditionMaps = false;
         boolean printHierarchy = false;
         boolean printChain = false;
-/*
-        e1 = "Fire";
-        e2 = "Surgery";
-        match = "1";
-        deep =true;
-        pathToOwlOntology = "//Users/piek/Desktop/CEO/CEO_ESO.owl";
-*/
+
+        if (args.length==0) {
+            args = testparameter.split(" ");
+        }
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
             if (arg.equals("--ont-file") && args.length>(i+1)) {
@@ -829,6 +1004,7 @@ public class CeoPathFinder {
         }
         if (!new File(pathToOwlOntology).exists()) {
             System.out.println("cannot find pathToOwlOntology = " + pathToOwlOntology);
+            return;
         }
         CeoPathFinder ceoPathFinder = new CeoPathFinder();
         ceoPathFinder.readOwlFile(pathToOwlOntology);
