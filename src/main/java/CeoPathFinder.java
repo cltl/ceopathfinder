@@ -8,10 +8,7 @@ import com.hp.hpl.jena.util.iterator.Filter;
 
 import java.io.File;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by piek on 11/07/2017.
@@ -27,6 +24,7 @@ public class CeoPathFinder {
     private HashMap<String, ArrayList<String>> classPosMap;
     static boolean during = false;
     static boolean deep = false;
+    static public int rule = 0; // 0 = assertion, 1 = property, 2 = subject-property, 3 = subject - property - object
 
     private OntModel ontologyModel;
 
@@ -61,6 +59,15 @@ public class CeoPathFinder {
          classPreMap = new HashMap<String, ArrayList<String>>();
          classPosMap = new HashMap<String, ArrayList<String>>();
          classDurMap = new HashMap<String, ArrayList<String>>();
+         rule = 0;
+    }
+
+    public static int getRule() {
+        return rule;
+    }
+
+    public static void setRule(int rule) {
+        CeoPathFinder.rule = rule;
     }
 
     public static boolean isDuring() {
@@ -161,6 +168,7 @@ public class CeoPathFinder {
 
                 if (valueStatement != null) {
                     RDFNode valueNode = valueStatement.getObject();
+                   // System.out.println("valueStatement.toString() = " + valueStatement.toString());
                     if (!ontClass.getLocalName().isEmpty()) {
                         if (valueNode instanceof Resource) {
                             storeRuleEffect(valueNode.asResource(), ontClass.getLocalName(), superEffects);
@@ -180,6 +188,69 @@ public class CeoPathFinder {
         }
     }
 
+
+    
+    public void interpretOntologyOneLevel (OntClass ontClass, OntClass superclass) {
+        StmtIterator pI = ontClass.listProperties();
+        while (pI.hasNext()) {
+            Statement statement = pI.next();
+            RDFNode object = statement.getObject();
+            if (object.isAnon()) {
+                /// Restriction is a blank node
+                Property predicate = object.getModel().createProperty(owl, "hasValue");
+                Statement valueStatement = object.asResource().getProperty(predicate);
+
+                if (valueStatement != null) {
+                    RDFNode valueNode = valueStatement.getObject();
+                   // System.out.println("valueStatement.toString() = " + valueStatement.toString());
+                    if (!ontClass.getLocalName().isEmpty()) {
+                        if (valueNode instanceof Resource) {
+                            storeRuleEffect(valueNode.asResource(), ontClass.getLocalName());
+                        } else {
+                            // object is a literal
+                            System.out.println("Literal: \"" + object.toString() + "\"");
+                        }
+                    }
+                }
+            }
+
+        }
+        storeParentStatements(ontClass, superclass);
+        // Go deep
+        for (Iterator j = ontClass.listSubClasses(); j.hasNext();) {
+            OntClass c = (OntClass) j.next();
+            interpretOntologyOneLevel(c, ontClass);
+        }
+    }
+
+    public void storeParentStatements (OntClass ontClass, OntClass superclass) {
+        if (superclass!=null) {
+            StmtIterator pI = superclass.listProperties();
+            while (pI.hasNext()) {
+                Statement statement = pI.next();
+                RDFNode object = statement.getObject();
+                if (object.isAnon()) {
+                    /// Restriction is a blank node
+                    Property predicate = object.getModel().createProperty(owl, "hasValue");
+                    Statement valueStatement = object.asResource().getProperty(predicate);
+
+                    if (valueStatement != null) {
+                        RDFNode valueNode = valueStatement.getObject();
+                        // System.out.println("valueStatement.toString() = " + valueStatement.toString());
+                        if (!ontClass.getLocalName().isEmpty()) {
+                            if (valueNode instanceof Resource) {
+                                storeRuleEffect(valueNode.asResource(), ontClass.getLocalName());
+                            } else {
+                                // object is a literal
+                                System.out.println("Literal: \"" + object.toString() + "\"");
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     public ArrayList<String> getRuleEffects (RDFNode rdfNode) {
         ArrayList<String> effects = new ArrayList<String>();
         Individual resourceClass = ontologyModel.getIndividual(rdfNode.toString());
@@ -189,8 +260,14 @@ public class CeoPathFinder {
             while (pI.hasNext()) {
                 Statement statement = pI.next();
                 RDFNode object = statement.getObject();
-                String effect = getRuleEffect(object);
+                String effect = "";
+               // System.out.println("rule = " + rule);
+                if (rule==0) effect = getRuleEffect(object);
+                if (rule==1) effect = getPropertyRuleEffect(object);
+                if (rule==2) effect = getPropertySubjectRuleEffect(object);
+                if (rule==3) effect = getPropertySubjectObjectRuleEffect(object);
                 if (!effects.contains(effect) && !effect.isEmpty()) {
+                    //System.out.println("effect = " + effect);
                     effects.add(effect);
                 }
             }
@@ -418,7 +495,7 @@ public class CeoPathFinder {
                 Statement statement = pI.next();
                 RDFNode object = statement.getObject();
                 String effect = getRuleEffect(object);
-
+                System.out.println("effect = " + effect);
             }
         }
     }
@@ -473,7 +550,6 @@ public class CeoPathFinder {
 
     public String getRuleEffect (RDFNode rdfNode) {
         String ruleEffect = "";
-        //OntClass resourceClass = ontologyModel.getOntClass(rdfNode.toString());
         Individual resourceClass = ontologyModel.getIndividual(rdfNode.toString());
 
         String valueString = "";
@@ -485,13 +561,78 @@ public class CeoPathFinder {
             StmtIterator pI = resourceClass.listProperties();
             while (pI.hasNext()) {
                 Statement statement = pI.next();
+               // System.out.println("statement = " + statement.toString());
                 valueString += getUnarySituationRuleValue(statement);
                 propertyString += getSituationAssertionProperty(statement);
                 subjectString += getSituationAssertionSubject(statement);
                 objectString += getSituationAssertionObject(statement);
             }
         }
+       // System.out.println("objectString = " + objectString);
         if (!valueString.isEmpty()) ruleEffect += valueString;
+        if (!subjectString.isEmpty()) ruleEffect += subjectString;
+        if (!propertyString.isEmpty()) ruleEffect += propertyString;
+        if (!objectString.isEmpty()) ruleEffect += objectString;
+        if (ruleEffect.startsWith("#")) ruleEffect = ruleEffect.substring(1);
+        return ruleEffect;
+    }
+
+    public String getPropertyRuleEffect (RDFNode rdfNode) {
+        String ruleEffect = "";
+        Individual resourceClass = ontologyModel.getIndividual(rdfNode.toString());
+
+        String propertyString = "";
+        if (resourceClass!=null) {
+            //System.out.println("rdfNode.toString() = " + rdfNode.toString());
+            StmtIterator pI = resourceClass.listProperties();
+            while (pI.hasNext()) {
+                Statement statement = pI.next();
+                propertyString += getSituationAssertionProperty(statement);
+            }
+        }
+        if (!propertyString.isEmpty()) ruleEffect += propertyString;
+        if (ruleEffect.startsWith("#")) ruleEffect = ruleEffect.substring(1);
+        return ruleEffect;
+    }
+
+    public String getPropertySubjectRuleEffect (RDFNode rdfNode) {
+        String ruleEffect = "";
+        Individual resourceClass = ontologyModel.getIndividual(rdfNode.toString());
+
+        String propertyString = "";
+        String subjectString = "";
+        if (resourceClass!=null) {
+            //System.out.println("rdfNode.toString() = " + rdfNode.toString());
+            StmtIterator pI = resourceClass.listProperties();
+            while (pI.hasNext()) {
+                Statement statement = pI.next();
+                propertyString += getSituationAssertionProperty(statement);
+                subjectString += getSituationAssertionSubject(statement);
+            }
+        }
+        if (!subjectString.isEmpty()) ruleEffect += subjectString;
+        if (!propertyString.isEmpty()) ruleEffect += propertyString;
+        if (ruleEffect.startsWith("#")) ruleEffect = ruleEffect.substring(1);
+        return ruleEffect;
+    }
+
+    public String getPropertySubjectObjectRuleEffect (RDFNode rdfNode) {
+        String ruleEffect = "";
+        Individual resourceClass = ontologyModel.getIndividual(rdfNode.toString());
+
+        String propertyString = "";
+        String subjectString = "";
+        String objectString = "";
+        if (resourceClass!=null) {
+            //System.out.println("rdfNode.toString() = " + rdfNode.toString());
+            StmtIterator pI = resourceClass.listProperties();
+            while (pI.hasNext()) {
+                Statement statement = pI.next();
+                propertyString += getSituationAssertionProperty(statement);
+                subjectString += getSituationAssertionSubject(statement);
+                objectString += getSituationAssertionObject(statement);
+            }
+        }
         if (!subjectString.isEmpty()) ruleEffect += subjectString;
         if (!propertyString.isEmpty()) ruleEffect += propertyString;
         if (!objectString.isEmpty()) ruleEffect += objectString;
@@ -526,6 +667,11 @@ public class CeoPathFinder {
         OntClass myClass = ontologyModel.getOntClass(nwr+classString);
         ArrayList<String> supereffects = new ArrayList<String>();
         interpretOntology(myClass,supereffects);
+    }
+
+    public void interpretOntologyWithParent (String classString) {
+        OntClass myClass = ontologyModel.getOntClass(nwr+classString);
+        interpretOntologyOneLevel(myClass, null);
     }
 
     public ArrayList<String> getPostConditions (OntClass myClass) {
@@ -660,6 +806,54 @@ public class CeoPathFinder {
         }
        // System.out.println("matchCount = " + matchCount);
         return matchCount;
+    }
+
+    public ArrayList<String> getEventMatchesDirect (String event1, String event2) {
+        ArrayList<String> matches = new ArrayList<String>();
+        ArrayList<String> pos1 = new ArrayList<String>();
+        ArrayList<String> dur1 = new ArrayList<String>();
+        ArrayList<String> pre2 = new ArrayList<String>();
+        ArrayList<String> dur2 = new ArrayList<String>();
+        if (classPosMap.containsKey(event1)) pos1 = classPosMap.get(event1);
+        if (classPreMap.containsKey(event2)) pre2 = classPreMap.get(event2);
+        if (classDurMap.containsKey(event1)) dur1 = classDurMap.get(event1);
+        if (classDurMap.containsKey(event2)) dur2 = classDurMap.get(event2);
+
+/*
+        System.out.println("event1 = " + event1);
+        System.out.println("event2 = " + event2);
+        System.out.println("pos1.size() = " + pos1.size());
+        System.out.println("dur1.size() = " + dur1.size());
+        System.out.println("pre2.size() = " + pre2.size());
+        System.out.println("dur2.size() = " + dur2.size());
+*/
+
+        for (int i = 0; i < pos1.size(); i++) {
+            String p = pos1.get(i);
+            if (!p.isEmpty()) {
+                if (pre2.contains(p)) {
+                    if (!matches.contains(p)) matches.add(p);
+                } else if (dur2.contains(p)) {
+                    if (!matches.contains(p)) matches.add(p);
+                }
+            }
+        }
+
+        if (during) {
+            for (int i = 0; i < dur1.size(); i++) {
+                String p = dur1.get(i);
+                if (!p.isEmpty()) {
+                    if (pre2.contains(p)) {
+                        if (!matches.contains(p)) matches.add(p);
+                    }
+                    /*else if (dur2.contains(p)) {
+                        if (!matches.contains(p)) matches.add(p);
+                    }*/
+                }
+            }
+        }
+       // System.out.println("matchCount = " + matchCount);
+        return matches;
     }
 
     public Integer countEventMatchesInDirect (String event1, String event2) {
@@ -937,7 +1131,8 @@ public class CeoPathFinder {
             for (int j = 0; j < mention2Types.size(); j++) {
                 String m2Type = mention2Types.get(j);
                 Integer m1m2Direct = countEventMatchesDirect(m1Type, m2Type);
-                Integer m1m2InDirect = countEventMatchesInDirect(m1Type, m2Type);
+                Integer m1m2InDirect = 0;
+                // m1m2InDirect = countEventMatchesInDirect(m1Type, m2Type);
                 Integer path = m1m2Direct+m1m2InDirect;
                 if (path>bestPath) {
                     bestPath = path;
@@ -945,6 +1140,25 @@ public class CeoPathFinder {
             }
         }
         return bestPath;
+    }
+    public ArrayList<String> pathValuesForTypes (ArrayList<String> mention1Types, ArrayList<String> mention2Types) {
+        ArrayList<String> matchings = new ArrayList<String>();
+        if (Collections.disjoint(mention1Types, mention2Types)) {
+            for (int i = 0; i < mention1Types.size(); i++) {
+                String m1Type = mention1Types.get(i);
+                for (int j = 0; j < mention2Types.size(); j++) {
+                    String m2Type = mention2Types.get(j);
+                    if (!m1Type.equals(m2Type)) {
+                        ArrayList<String> constraints = getEventMatchesDirect(m1Type, m2Type);
+                        for (int k = 0; k < constraints.size(); k++) {
+                            String constraint = constraints.get(k);
+                            if (!matchings.contains(constraint)) matchings.add(constraint);
+                        }
+                    }
+                }
+            }
+        }
+        return matchings;
     }
 
     public void close () {
