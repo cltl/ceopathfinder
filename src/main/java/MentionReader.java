@@ -6,6 +6,10 @@ public class MentionReader {
     static CeoPathFinder ceoPathFinder = new CeoPathFinder();
     static Integer threshold = 1;
     static int deep = 0;
+    static boolean BASELINE = false;
+    static boolean DEBUG = false;
+    static public int rule = 0; // 0 = full assertion, 1 = property, 2 = subject-property, 3 = subject - property - object
+
     static HashMap<String, Integer> OOV = new HashMap<String, Integer>();
     ///Users/piek/Desktop/Roxane/Tommaso-v3/not-connected-events/3_1ecb.xml_not-connected-events.eval
     static public void main (String[] args) {
@@ -36,41 +40,41 @@ public class MentionReader {
             ArrayList<Mention> mentions = readFileToMentionList(file);
 
             /////// BASELINE //////////////
+            if (BASELINE) {
+                String ceoResultB1 = sameSentenceMentionBaselineMatch(mentions);
+                try {
+                    OutputStream fos = new FileOutputStream(file.getAbsoluteFile() + ".bl1");
+                    fos.write(ceoResultB1.getBytes());
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
-             String ceoResultB1 = sameSentenceMentionBaselineMatch(mentions);
-             try {
-                 OutputStream fos = new FileOutputStream(file.getAbsoluteFile()+".bl1");
-                 fos.write(ceoResultB1.getBytes());
-                 fos.close();
-             } catch (IOException e) {
-                 e.printStackTrace();
+                String ceoResultB3 = twoSentenceMentionBaselineMatch(mentions);
+                try {
+                    OutputStream fos = new FileOutputStream(file.getAbsoluteFile() + ".bl3");
+                    fos.write(ceoResultB3.getBytes());
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                String ceoResultB5 = fourSentenceMentionBaselineMatch(mentions);
+                try {
+                    OutputStream fos = new FileOutputStream(file.getAbsoluteFile() + ".bl5");
+                    fos.write(ceoResultB5.getBytes());
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                String ceoResultBAny = allMentionBaselineMatch(mentions);
+                try {
+                    OutputStream fos = new FileOutputStream(file.getAbsoluteFile() + ".blany");
+                    fos.write(ceoResultBAny.getBytes());
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
              }
-
-             String ceoResultB3 = twoSentenceMentionBaselineMatch(mentions);
-             try {
-                 OutputStream fos = new FileOutputStream(file.getAbsoluteFile()+".bl3");
-                 fos.write(ceoResultB3.getBytes());
-                 fos.close();
-             } catch (IOException e) {
-                 e.printStackTrace();
-             }
-             String ceoResultB5 = fourSentenceMentionBaselineMatch(mentions);
-             try {
-                 OutputStream fos = new FileOutputStream(file.getAbsoluteFile()+".bl5");
-                 fos.write(ceoResultB5.getBytes());
-                 fos.close();
-             } catch (IOException e) {
-                 e.printStackTrace();
-             }
-             String ceoResultBAny = allMentionBaselineMatch(mentions);
-             try {
-                 OutputStream fos = new FileOutputStream(file.getAbsoluteFile()+".blany");
-                 fos.write(ceoResultBAny.getBytes());
-                 fos.close();
-             } catch (IOException e) {
-                 e.printStackTrace();
-             }
-             
              String ceoResultAny = anyMentionCeoMatch(mentions, threshold);
              try {
                   OutputStream fos = new FileOutputStream(file.getAbsoluteFile()+".ceoANY");
@@ -138,22 +142,22 @@ public class MentionReader {
                                 if (matches1.size() > matches2.size()) {
                                     key = mention1.toString()+mention2.toString();
                                     str = mention1.toString() + "\t" + mention2.toString() + "\tHCPE";
-                                        str += "\t"+matches1.size()+"\t"+matches2.size()+"\t"+matches1.toString();
+                                    if (DEBUG) str += "\t"+matches1.size()+"\t"+matches2.size()+"\t"+matches1.toString();
                                 } else if (matches2.size() > matches1.size()) {
                                     key = mention2.toString()+mention1.toString();
                                     str = mention2.toString() + "\t" + mention1.toString() + "\tHCPE";
-                                         str += "\t"+matches1.size()+"\t"+matches2.size()+"\t"+matches2.toString();
+                                    if (DEBUG) str += "\t"+matches1.size()+"\t"+matches2.size()+"\t"+matches2.toString();
                                 }
                                 //// token fallback
                                 else if (mention1.getToken()<mention2.getToken()){
                                     key = mention1.toString()+mention2.toString();
                                     str = mention1.toString() + "\t" + mention2.toString() + "\tHCPE";
-                                        str += "\t"+matches1.size()+"\t"+matches2.size()+"\t"+matches1.toString();
+                                    if (DEBUG) str += "\t"+matches1.size()+"\t"+matches2.size()+"\t"+matches1.toString();
                                 }
                                 else if (mention2.getToken()<mention1.getToken()) {
                                     key = mention2.toString()+mention1.toString();
                                     str = mention2.toString() + "\t" + mention1.toString() + "\tHCPE";
-                                         str += "\t"+matches1.size()+"\t"+matches2.size()+"\t"+matches2.toString();
+                                    if (DEBUG) str += "\t"+matches1.size()+"\t"+matches2.size()+"\t"+matches2.toString();
                                 }
                                 if (!str.isEmpty() && !key.isEmpty()) {
                                     keyResults.put(key, str);
@@ -207,21 +211,21 @@ public class MentionReader {
                                     if (matches1.size() > matches2.size()) {
                                         key = mention1.toString()+mention2.toString();
                                         str = mention1.toString() + "\t" + mention2.toString() + "\tHCPE";
-                                            str += "\t"+matches1.size()+"\t"+matches2.size()+"\t"+matches1.toString();
+                                        if (DEBUG) str += "\t"+matches1.size()+"\t"+matches2.size()+"\t"+matches1.toString();
                                     } else if (matches2.size() > matches1.size()) {
                                         key = mention2.toString()+mention1.toString();
                                         str = mention2.toString() + "\t" + mention1.toString() + "\tHCPE";
-                                             str += "\t"+matches1.size()+"\t"+matches2.size()+"\t"+matches2.toString();
+                                        if (DEBUG) str += "\t"+matches1.size()+"\t"+matches2.size()+"\t"+matches2.toString();
                                     }
                                     else if (mention1.getToken()<mention2.getToken()){
                                         key = mention1.toString()+mention2.toString();
                                         str = mention1.toString() + "\t" + mention2.toString() + "\tHCPE";
-                                            str += "\t"+matches1.size()+"\t"+matches2.size()+"\t"+matches1.toString();
+                                        if (DEBUG) str += "\t"+matches1.size()+"\t"+matches2.size()+"\t"+matches1.toString();
                                     }
                                     else if (mention2.getToken()<mention1.getToken()) {
                                         key = mention2.toString()+mention1.toString();
                                         str = mention2.toString() + "\t" + mention1.toString() + "\tHCPE";
-                                             str += "\t"+matches1.size()+"\t"+matches2.size()+"\t"+matches2.toString();
+                                        if (DEBUG) str += "\t"+matches1.size()+"\t"+matches2.size()+"\t"+matches2.toString();
                                     }
                                     if (!str.isEmpty() && !key.isEmpty()) {
                                         keyResults.put(key, str);
@@ -264,21 +268,21 @@ public class MentionReader {
                                     if (matches1.size() > matches2.size()) {
                                         key = mention1.toString()+mention2.toString();
                                         str = mention1.toString() + "\t" + mention2.toString() + "\tHCPE";
-                                            str += "\t"+matches1.size()+"\t"+matches2.size()+"\t"+matches1.toString();
+                                        if (DEBUG) str += "\t"+matches1.size()+"\t"+matches2.size()+"\t"+matches1.toString();
                                     } else if (matches2.size() > matches1.size()) {
                                         key = mention2.toString()+mention1.toString();
                                         str = mention2.toString() + "\t" + mention1.toString() + "\tHCPE";
-                                             str += "\t"+matches1.size()+"\t"+matches2.size()+"\t"+matches2.toString();
+                                        if (DEBUG) str += "\t"+matches1.size()+"\t"+matches2.size()+"\t"+matches2.toString();
                                     }
                                     else if (mention1.getToken()<mention2.getToken()){
                                         key = mention1.toString()+mention2.toString();
                                         str = mention1.toString() + "\t" + mention2.toString() + "\tHCPE";
-                                            str += "\t"+matches1.size()+"\t"+matches2.size()+"\t"+matches1.toString();
+                                        if (DEBUG) str += "\t"+matches1.size()+"\t"+matches2.size()+"\t"+matches1.toString();
                                     }
                                     else if (mention2.getToken()<mention1.getToken()) {
                                         key = mention2.toString()+mention1.toString();
                                         str = mention2.toString() + "\t" + mention1.toString() + "\tHCPE";
-                                             str += "\t"+matches1.size()+"\t"+matches2.size()+"\t"+matches2.toString();
+                                        if (DEBUG) str += "\t"+matches1.size()+"\t"+matches2.size()+"\t"+matches2.toString();
                                     }
                                     if (!str.isEmpty() && !key.isEmpty()) {
                                         keyResults.put(key, str);
@@ -471,7 +475,7 @@ public class MentionReader {
                 if (!mention1.getTokenString().equals(mention2.getTokenString()) &&
                         !mention1.getWord().equalsIgnoreCase(mention2.getWord())) {
                     String str = "";
-/*                    if (mention1.getToken()<mention2.getToken()){
+                    if (mention1.getToken()<mention2.getToken()){
                         str = mention1.toString() + "\t" + mention2.toString() + "\tHCPE";
                     }
                     else if (mention2.getToken()<mention1.getToken()) {
@@ -479,14 +483,7 @@ public class MentionReader {
                     }
                     if (!str.isEmpty()) {
                         if (!results.contains(str)) results.add(str);
-                    }*/
-
-                    str = mention1.toString() + "\t" + mention2.toString() + "\tHCPE";
-                    if (!results.contains(str)) results.add(str);
-
-                    str = mention2.toString() + "\t" + mention1.toString() + "\tHCPE";
-                    if (!results.contains(str)) results.add(str);
-
+                    }
                 }
             }
         }
