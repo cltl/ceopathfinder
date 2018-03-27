@@ -6,16 +6,48 @@ public class MentionReader {
     static CeoPathFinder ceoPathFinder = new CeoPathFinder();
     static Integer threshold = 1;
     static int deep = 0;
-    static boolean BASELINE = false;
+    static boolean BASELINE = true;
     static boolean DEBUG = false;
     static public int rule = 0; // 0 = full assertion, 1 = property, 2 = subject-property, 3 = subject - property - object
 
     static HashMap<String, Integer> OOV = new HashMap<String, Integer>();
     ///Users/piek/Desktop/Roxane/Tommaso-v3/not-connected-events/3_1ecb.xml_not-connected-events.eval
+
+    static String testParameters = "--ceo-lexicon /Users/piek/Desktop/Roxane/CEO-lexicon/ceo-lexicon-ecb-v1.txt " +
+            "--ceo-ontology /Users/piek/Desktop/Roxane/CEO.v1.0/CEO_version_1.owl " +
+            "--input /Users/piek/Desktop/Roxane/CEO.v1.0/CEO_version_1.owl " +
+            "--ontology-depth 1 " +
+            "--property-threshold 1 /Users/piek/Desktop/Roxane/Tommaso-v5/connected_events" +
+            "";
     static public void main (String[] args) {
-         String lexiconPath = "/Users/piek/Desktop/Roxane/CEO-lexicon/ceo-lexicon-ecb-v1.txt";
+        String lexiconPath = "";
+        String pathToCeo = "";
+        String mentionFolder = "";
+        for (int i = 0; i < args.length; i++) {
+            String arg = args[i];
+            if (arg.equalsIgnoreCase("--ceo-lexicon") && args.length>(i+1)){
+                lexiconPath = args[i+1];
+            }
+            else if (arg.equalsIgnoreCase("--ceo-ontology") && args.length>(i+1)){
+                pathToCeo = args[i+1];
+            }
+            else if (arg.equalsIgnoreCase("--ontology-depth") && args.length>(i+1)){
+                deep = Integer.parseInt(args[i+1]);
+            }
+            else if (arg.equalsIgnoreCase("--property-threshold") && args.length>(i+1)){
+                threshold = Integer.parseInt(args[i+1]);
+            }
+            else if (arg.equalsIgnoreCase("--input") && args.length>(i+1)){
+                mentionFolder = args[i+1];
+            }
+            else if (arg.equalsIgnoreCase("--debug")){
+                DEBUG = true;
+            }
+            else {
+                System.out.println("parameter value = " + arg);
+            }
+        }
          ceoLexicon = readLexiconFile(new File(lexiconPath));
-         String pathToCeo = "/Users/piek/Desktop/Roxane/CEO.v1.0/CEO_version_1.owl";
          ceoPathFinder.readOwlFile(pathToCeo);
 
         ceoPathFinder.setDuring(true);
@@ -30,7 +62,6 @@ public class MentionReader {
          else {
             ceoPathFinder.interpretOntology("Physical");
          }
-         String mentionFolder = "/Users/piek/Desktop/Roxane/Tommaso-v4/all_event_mentions";
          ArrayList<File> files = makeRecursiveFileList(new File(mentionFolder), ".eval");
          for (int i = 0; i < files.size(); i++) {
             File file = files.get(i);
