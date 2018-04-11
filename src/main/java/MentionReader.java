@@ -9,6 +9,7 @@ public class MentionReader {
     static boolean BASELINE = true;
     static boolean DEBUG = false;
     static public int rule = 0; // 0 = full assertion, 1 = property, 2 = subject-property, 3 = subject - property - object
+    static int intermediate = 0;
 
     static HashMap<String, Integer> OOV = new HashMap<String, Integer>();
     ///Users/piek/Desktop/Roxane/Tommaso-v3/not-connected-events/3_1ecb.xml_not-connected-events.eval
@@ -17,12 +18,15 @@ public class MentionReader {
             "--ceo-ontology /Users/piek/Desktop/Roxane/CEO.v1.0/CEO_version_1.owl " +
             "--input /Users/piek/Desktop/Roxane/CEO.v1.0/CEO_version_1.owl " +
             "--ontology-depth 1 " +
-            "--property-threshold 1 /Users/piek/Desktop/Roxane/Tommaso-v5/connected_events" +
-            "";
+            "--property-threshold 1 " +
+            "--input /Users/piek/Desktop/Roxane/Tommaso-v5/test " +
+            "--intermediate 1 " +
+            "--debug";
     static public void main (String[] args) {
         String lexiconPath = "";
         String pathToCeo = "";
         String mentionFolder = "";
+        args = testParameters.split(" ");
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
             if (arg.equalsIgnoreCase("--ceo-lexicon") && args.length>(i+1)){
@@ -39,6 +43,9 @@ public class MentionReader {
             }
             else if (arg.equalsIgnoreCase("--input") && args.length>(i+1)){
                 mentionFolder = args[i+1];
+            }
+            else if (arg.equalsIgnoreCase("--intermediate") && args.length>(i+1)){
+                intermediate = Integer.parseInt(args[i+1]);
             }
             else if (arg.equalsIgnoreCase("--debug")){
                 DEBUG = true;
@@ -164,9 +171,16 @@ public class MentionReader {
                     if (!mention1.getTokenString().equals(mention2.getTokenString()) &&
                             !mention1.getWord().equalsIgnoreCase(mention2.getWord())) {
                         if (ceoLexicon.containsKey(mention2.getWord().toLowerCase())) {
+                            //if (DEBUG) System.out.println("mention1.getWord() = " + mention1.getWord());
+                            //if (DEBUG) System.out.println("mention2.getWord() = " + mention2.getWord());
+
                             ArrayList<String> mention2Classes = ceoLexicon.get(mention2.getWord().toLowerCase());
-                            ArrayList<String> matches1 = ceoPathFinder.pathValuesForTypes(mention1Classes, mention2Classes);
-                            ArrayList<String> matches2 = ceoPathFinder.pathValuesForTypes(mention2Classes, mention1Classes);
+                            //if (DEBUG) System.out.println("mention1Classes = " + mention1Classes.toString());
+                            //if (DEBUG) System.out.println("mention2Classes = " + mention2Classes.toString());
+                            ArrayList<String> matches1 = ceoPathFinder.pathValuesForTypes(mention1Classes, mention2Classes, intermediate);
+                            ArrayList<String> matches2 = ceoPathFinder.pathValuesForTypes(mention2Classes, mention1Classes, intermediate);
+                            //if (DEBUG) if (matches1.size()>0) System.out.println("matches1 = " + matches1.toString());
+                            //if (DEBUG) if (matches2.size()>0) System.out.println("matches2 = " + matches2.toString());
                             if (matches1.size()>=threshold || matches2.size()>=threshold) {
                                 String str = "";
                                 String key = "";
@@ -234,8 +248,8 @@ public class MentionReader {
                                 !mention1.getWord().equalsIgnoreCase(mention2.getWord())) {
                             if (ceoLexicon.containsKey(mention2.getWord().toLowerCase())) {
                                 ArrayList<String> mention2Classes = ceoLexicon.get(mention2.getWord().toLowerCase());
-                                ArrayList<String> matches1 = ceoPathFinder.pathValuesForTypes(mention1Classes, mention2Classes);
-                                ArrayList<String> matches2 = ceoPathFinder.pathValuesForTypes(mention2Classes, mention1Classes);
+                                ArrayList<String> matches1 = ceoPathFinder.pathValuesForTypes(mention1Classes, mention2Classes, intermediate);
+                                ArrayList<String> matches2 = ceoPathFinder.pathValuesForTypes(mention2Classes, mention1Classes, intermediate);
                                 if (matches1.size()>=threshold || matches2.size()>=threshold) {
                                     String str = "";
                                     String key = "";
@@ -291,8 +305,8 @@ public class MentionReader {
                                 !mention1.getWord().equalsIgnoreCase(mention2.getWord())) {
                             if (ceoLexicon.containsKey(mention2.getWord().toLowerCase())) {
                                 ArrayList<String> mention2Classes = ceoLexicon.get(mention2.getWord().toLowerCase());
-                                ArrayList<String> matches1 = ceoPathFinder.pathValuesForTypes(mention1Classes, mention2Classes);
-                                ArrayList<String> matches2 = ceoPathFinder.pathValuesForTypes(mention2Classes, mention1Classes);
+                                ArrayList<String> matches1 = ceoPathFinder.pathValuesForTypes(mention1Classes, mention2Classes, intermediate);
+                                ArrayList<String> matches2 = ceoPathFinder.pathValuesForTypes(mention2Classes, mention1Classes, intermediate);
                                 if (matches1.size()>=threshold || matches2.size()>=threshold) {
                                     String str = "";
                                     String key = "";
@@ -353,8 +367,8 @@ public class MentionReader {
                                  !mention1.getWord().equalsIgnoreCase(mention2.getWord())) {
                              if (ceoLexicon.containsKey(mention2.getWord().toLowerCase())) {
                                  ArrayList<String> mention2Classes = ceoLexicon.get(mention2.getWord().toLowerCase());
-                                 ArrayList<String> matches1 = ceoPathFinder.pathValuesForTypes(mention1Classes, mention2Classes);
-                                 ArrayList<String> matches2 = ceoPathFinder.pathValuesForTypes(mention2Classes, mention1Classes);
+                                 ArrayList<String> matches1 = ceoPathFinder.pathValuesForTypes(mention1Classes, mention2Classes, intermediate);
+                                 ArrayList<String> matches2 = ceoPathFinder.pathValuesForTypes(mention2Classes, mention1Classes, intermediate);
                                  if (matches1.size()>=threshold || matches2.size()>=threshold) {
                                      String str = "";
                                      String key = "";
