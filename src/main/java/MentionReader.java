@@ -26,7 +26,7 @@ public class MentionReader {
         String lexiconPath = "";
         String pathToCeo = "";
         String mentionFolder = "";
-        args = testParameters.split(" ");
+        //args = testParameters.split(" ");
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
             if (arg.equalsIgnoreCase("--ceo-lexicon") && args.length>(i+1)){
