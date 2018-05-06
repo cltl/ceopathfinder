@@ -21,19 +21,25 @@ public class MentionReader {
     static int intermediate = 0;
     static HashMap<String, ArrayList<String>> mentionInstanceMap = null;
     static HashMap<String, ArrayList<String>> instancMentionMap = null;
-    static HashMap<String,NarrativeChain> chains;
-    static HashMap<String,ArrayList<String>> verbs;
+    static HashMap<String,NarrativeChain> chains = null;
+    static HashMap<String,ArrayList<String>> verbs = null;
 
     static HashMap<String, Integer> OOV = new HashMap<String, Integer>();
     ///Users/piek/Desktop/Roxane/Tommaso-v3/not-connected-events/3_1ecb.xml_not-connected-events.eval
 
-    static String testParameters = "--ceo-lexicon /Users/piek/Desktop/Roxane/CEO-lexicon/ceo-lexicon-ecb-v1.txt " +
+    static String testCeoParameters = "--ceo-lexicon /Users/piek/Desktop/Roxane/CEO-lexicon/ceo-lexicon-ecb-v1.txt " +
             "--ceo-ontology /Users/piek/Desktop/Roxane/CEO.v1.0/CEO_version_1.owl " +
             "--ontology-depth 1 " +
             "--property-threshold 1 " +
             "--input /Users/piek/Desktop/Roxane/Tommaso-v5/gold " +
             "--output /Users/piek/Desktop/Roxane/Tommaso-v5/out " +
             "--intermediate 1 " +
+            "--gold " +
+            "--debug";
+
+    static String testNCParameters = "--chains /Code/vu/ceopathfinder/resources/narrativechains/EventChains_JurChamb_CEO.rtf " +
+            "--input /Users/piek/Desktop/Roxane/Tommaso-v5/gold " +
+            "--output /Users/piek/Desktop/Roxane/Tommaso-v5/out " +
             "--gold " +
             "--debug";
 
@@ -44,7 +50,8 @@ public class MentionReader {
         String outputFolder = "";
         String chainpath = "";
         if (args.length==0) {
-            args = testParameters.split(" ");
+            //args = testCeoParameters.split(" ");
+            args = testNCParameters.split(" ");
         }
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
@@ -91,8 +98,10 @@ public class MentionReader {
             METHOD = 1;
             chains = NarrativeChains.getNarrativeChains(chainpath);
             verbs = NarrativeChains.buildVerbIndex(chains);
+            System.out.println("chains.size() = " + chains.size());
+            System.out.println("verbs.size() = " + verbs.size());
         }
-        else if (pathToCeo.isEmpty()) {
+        else if (!pathToCeo.isEmpty()) {
             METHOD = 0;
             ceoPathFinder.readLexiconFile(new File(lexiconPath));
             ceoPathFinder.readOwlFile(pathToCeo);
@@ -195,7 +204,7 @@ public class MentionReader {
              else if (METHOD == 1) {
                  String ceoResultAny = anyMentionNarrativeChainMatch(mentions, threshold);
                  try {
-                     OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".ceoANY");
+                     OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".ncANY");
                      fos.write(ceoResultAny.getBytes());
                      fos.close();
                  } catch (IOException e) {
@@ -204,7 +213,7 @@ public class MentionReader {
 
                  String ceoResult1 = sameSentenceMentionNarrativeChainMatch(mentions, threshold);
                  try {
-                     OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".ceo1S");
+                     OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".nc1S");
                      fos.write(ceoResult1.getBytes());
                      fos.close();
                  } catch (IOException e) {
@@ -213,7 +222,7 @@ public class MentionReader {
 
                  String ceoResult3 = twoSentenceMentionNarrativeChainMatch(mentions, threshold);
                  try {
-                     OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".ceo3S");
+                     OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".nc3S");
                      fos.write(ceoResult3.getBytes());
                      fos.close();
                  } catch (IOException e) {
@@ -221,7 +230,7 @@ public class MentionReader {
                  }
                  String ceoResult5 = fourSentenceMentionNarrativeChainMatch(mentions, threshold);
                  try {
-                     OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".ceo5S");
+                     OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".nc5S");
                      fos.write(ceoResult5.getBytes());
                      fos.close();
                  } catch (IOException e) {

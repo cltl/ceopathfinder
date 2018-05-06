@@ -91,7 +91,7 @@ public class NarrativeChains {
                 }
             }
         }
-        return verbs;
+        return verbChainMap;
     }
 
     //EventChains_JurChamb_CEO.rtf
