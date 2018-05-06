@@ -6,8 +6,7 @@ import com.hp.hpl.jena.rdf.model.*;
 import com.hp.hpl.jena.util.FileManager;
 import com.hp.hpl.jena.util.iterator.Filter;
 
-import java.io.File;
-import java.io.InputStream;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -22,9 +21,14 @@ public class CeoPathFinder {
     private HashMap<String, ArrayList<String>> classPreMap;
     private HashMap<String, ArrayList<String>> classDurMap;
     private HashMap<String, ArrayList<String>> classPosMap;
+    static private String matchedHow = "";
     static boolean during = false;
     static boolean deep = false;
     static public int rule = 0; // 0 = assertion, 1 = property, 2 = subject-property, 3 = subject - property - object
+    public HashMap<String, ArrayList<String>> ceoLexicon;
+
+
+
 
     private OntModel ontologyModel;
 
@@ -59,7 +63,43 @@ public class CeoPathFinder {
          classPreMap = new HashMap<String, ArrayList<String>>();
          classPosMap = new HashMap<String, ArrayList<String>>();
          classDurMap = new HashMap<String, ArrayList<String>>();
+         ceoLexicon = new HashMap<String, ArrayList<String>>();
          rule = 0;
+         matchedHow = "";
+    }
+
+    public void readLexiconFile (File file) {
+            if (file.exists()) {
+                try {
+                    FileInputStream fis = new FileInputStream(file);
+                    InputStreamReader isr = new InputStreamReader(fis);
+                    BufferedReader in = new BufferedReader(isr);
+                    String inputLine;
+                    while (in.ready() && (inputLine = in.readLine()) != null) {
+                        if (inputLine.trim().length() > 0) {
+                            String[] fields = inputLine.split("\t");
+                            ArrayList<String> types = new ArrayList<String>();
+                            String word = "";
+                            for (int i = 0; i < fields.length; i++) {
+                                String field = fields[i];
+                                if (i == 0) word = field.trim().toLowerCase();
+                                else {
+                                    types.add(field.trim());
+                                }
+                            }
+                            if (!types.isEmpty()) {
+                                ceoLexicon.put(word, types);
+                            }
+                        }
+                    }
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                System.out.println("Cannot find file = " + file.getAbsolutePath());
+            }
+            System.out.println("lexicon.size() = " + ceoLexicon.size());
     }
 
     public static int getRule() {
@@ -762,6 +802,7 @@ public class CeoPathFinder {
     }
 
     public ArrayList<String> getEventMatchesDirect (String event1, String event2) {
+        matchedHow = "";
         ArrayList<String> matches = new ArrayList<String>();
         ArrayList<String> pos1 = new ArrayList<String>();
         ArrayList<String> dur1 = new ArrayList<String>();
@@ -776,19 +817,22 @@ public class CeoPathFinder {
             String p = pos1.get(i);
             if (!p.isEmpty()) {
                 if (pre2.contains(p)) {
-                    if (!matches.contains(p)) matches.add(p);
+                    String log = event1+"=pos1-pre2:"+p+"="+event2;
+                    if (!matches.contains(log)) matches.add(log);
                 } else if (dur2.contains(p)) {
-                    if (!matches.contains(p)) matches.add(p);
+                    String log = event1+"=pos1-dur2:"+p+"="+event2;
+                    if (!matches.contains(log)) matches.add(log);
                 }
             }
         }
 
-        if (during) {
+        if (during && matches.isEmpty()) {
             for (int i = 0; i < dur1.size(); i++) {
                 String p = dur1.get(i);
                 if (!p.isEmpty()) {
                     if (pre2.contains(p)) {
-                        if (!matches.contains(p)) matches.add(p);
+                        String log = event1+"=dur1-pre2:"+p+"="+event2;;
+                        if (!matches.contains(log)) matches.add(log);
                     }
                     /*else if (dur2.contains(p)) {
                         if (!matches.contains(p)) matches.add(p);
@@ -814,39 +858,45 @@ public class CeoPathFinder {
            /// We start from the pre conditions of the last event and reason back, considering this as a bridge condition
            for (int i = 0; i < pre2.size(); i++) {
                String bridgeCondition = pre2.get(i);
-               if (posMap.containsKey(bridgeCondition)) {
-                   //// get all classes that have the bridgeCondition as a post condition
-                   ArrayList<String> postClasses = posMap.get(bridgeCondition);
-                   for (int j = 0; j < postClasses.size(); j++) {
-                       String postClass = postClasses.get(j);
-                       if (!postClass.equals(event1) && !postClass.equals(event2)) {
-                           matches = getEventMatchesDirect(event1, postClass);
-                           if (!matches.isEmpty()) {
-                               matches.add(bridgeCondition);
-                           }
-                       }
-                       else {
-                           //// this is event1,2 and therefore a direct mapping
-                       }
-                   }
-               }
-           }
-           if (during) {
-               /// in the next loop we consider during relations of the last event2 and reason back
-               for (int i = 0; i < dur2.size(); i++) {
-                   String bridgeCondition = dur2.get(i);
+               if (!bridgeCondition.isEmpty()) {
                    if (posMap.containsKey(bridgeCondition)) {
                        //// get all classes that have the bridgeCondition as a post condition
                        ArrayList<String> postClasses = posMap.get(bridgeCondition);
                        for (int j = 0; j < postClasses.size(); j++) {
                            String postClass = postClasses.get(j);
                            if (!postClass.equals(event1) && !postClass.equals(event2)) {
+                               /// we check if there is a direct match for event1 and the postClass
                                matches = getEventMatchesDirect(event1, postClass);
-                               if (!matches.isEmpty()) {
-                                  matches.add(bridgeCondition);
+                               String log = event1+"="+postClass+"=pos1-bridge1-pre2:" + bridgeCondition+"="+event2;
+                               if (!matches.isEmpty() && !matches.contains(log)) {
+                                   matches.add(log);
                                }
                            } else {
                                //// this is event1,2 and therefore a direct mapping
+                           }
+                       }
+                   }
+               }
+           }
+           if (during && matches.isEmpty()) {
+               /// in the next loop we consider during relations of the last event2 and reason back
+               for (int i = 0; i < dur2.size(); i++) {
+                   String bridgeCondition = dur2.get(i);
+                   if (!bridgeCondition.isEmpty()) {
+                       if (posMap.containsKey(bridgeCondition)) {
+                           //// get all classes that have the bridgeCondition as a post condition
+                           ArrayList<String> postClasses = posMap.get(bridgeCondition);
+                           for (int j = 0; j < postClasses.size(); j++) {
+                               String postClass = postClasses.get(j);
+                               if (!postClass.equals(event1) && !postClass.equals(event2)) {
+                                   matches = getEventMatchesDirect(event1, postClass);
+                                   String log = event1+"="+postClass+"=pos1-bridge1-dur2:" + bridgeCondition+"="+event2;
+                                   if (!matches.isEmpty() && !matches.contains(log)) {
+                                       matches.add(log);
+                                   }
+                               } else {
+                                   //// this is event1,2 and therefore a direct mapping
+                               }
                            }
                        }
                    }
@@ -879,8 +929,9 @@ public class CeoPathFinder {
                             /// the postClass has preconditions,
                             // we are going to check if any of these is a post condition of event1  with an intermediate class
                             matches = getEventMatchesInDirect(event1, postClass);
-                            if (!matches.isEmpty()) {
-                               matches.add(bridgeCondition);
+                            String log = event1+"="+postClass+"=pos1-bridge2-pre2:" + bridgeCondition+"="+event2;
+                            if (!matches.isEmpty() && !matches.contains(log)) {
+                                matches.add(log);
                             }
                         }
                     }
@@ -890,7 +941,7 @@ public class CeoPathFinder {
                 }
             }
         }
-        if (during) {
+        if (during && matches.isEmpty()) {
             /// in the next loop we consider during relations of the last event2 and reason back
             for (int i = 0; i < dur2.size(); i++) {
                 String bridgeCondition = dur2.get(i);
@@ -901,8 +952,9 @@ public class CeoPathFinder {
                         String postClass = postClasses.get(j);
                         if (!postClass.equals(event1) && !postClass.equals(event2)) {
                             matches = getEventMatchesInDirect(event1, postClass);
-                            if (!matches.isEmpty()) {
-                               matches.add(bridgeCondition);
+                            String log = event1+"="+postClass+"=pos1-bridge2-dur2:" + bridgeCondition+"="+event2;
+                            if (!matches.isEmpty() && !matches.contains(log)) {
+                                matches.add(log);
                             }
                         } else {
                             //// this is event1,2 and therefore a direct mapping
@@ -1199,5 +1251,32 @@ public class CeoPathFinder {
         }
         ceoPathFinder.close();
 
+    }
+
+    public void setInheritanceDepth (int deep) {
+        if (deep==2) {
+           this.interpretOntologyWithInheritance("Physical");
+        }
+        else if (deep==1){
+           this.interpretOntologyWithParent("Physical");
+        }
+        else {
+           this.interpretOntology("Physical");
+        }
+    }
+
+    public boolean areCircumstantial (String lemma1, String lemma2, int intermediate, Integer threshold) {
+        if (ceoLexicon.containsKey(lemma1.toLowerCase())) {
+            ArrayList<String> mention1Classes = ceoLexicon.get(lemma1.toLowerCase());
+            if (ceoLexicon.containsKey(lemma2.toLowerCase())) {
+                ArrayList<String> mention2Classes = ceoLexicon.get(lemma2.toLowerCase());
+                ArrayList<String> matches1 = pathValuesForTypes(mention1Classes, mention2Classes, intermediate);
+                ArrayList<String> matches2 = pathValuesForTypes(mention2Classes, mention1Classes, intermediate);
+                if (matches1.size() >= threshold || matches2.size() >= threshold) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

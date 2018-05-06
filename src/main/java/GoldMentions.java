@@ -6,9 +6,7 @@ public class GoldMentions {
     static public void main (String[] args) {
          String pathToGold = "/Users/piek/Desktop/Roxane/CEO_evaluation/gold";
          String mentionFolder = "/Users/piek/Desktop/Roxane/Tommaso-v4/all_event_mentions";
-
          ArrayList<File> files = MentionReader.makeRecursiveFileList(new File(pathToGold), ".eval");
-
          for (int i = 0; i < files.size(); i++) {
             File file = files.get(i);
             if (!file.getName().equals("19_1ecb.xml.eval"))  continue;
