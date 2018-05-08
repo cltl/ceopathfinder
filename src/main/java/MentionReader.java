@@ -13,10 +13,8 @@ public class MentionReader {
     static CeoPathFinder ceoPathFinder = new CeoPathFinder();
     static Integer threshold = 1;
     static int deep = 0;
-    static boolean BASELINE = false;
-    static boolean GOLD = false;
     static boolean DEBUG = false;
-    static int METHOD = -1;   // 0 = CEO, 1 = NarrativeChains
+    static int METHOD = -1;   // 0 = BASELINE, 1 = CEO, 2 = NarrativeChains, 3 = FBK PRO, 4 = Framenet cause
     static public int rule = 0; // 0 = full assertion, 1 = property, 2 = subject-property, 3 = subject - property - object
     static int intermediate = 0;
     static HashMap<String, ArrayList<String>> mentionInstanceMap = null;
@@ -56,7 +54,11 @@ public class MentionReader {
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
             System.out.println("parameter value = " + arg);
-            if (arg.equalsIgnoreCase("--ceo-lexicon") && args.length>(i+1)){
+
+            if (arg.equalsIgnoreCase("--method") && args.length>(i+1)){
+                METHOD = Integer.parseInt(args[i+1]);
+            }
+            else if (arg.equalsIgnoreCase("--ceo-lexicon") && args.length>(i+1)){
                 lexiconPath = args[i+1];
             }
             else if (arg.equalsIgnoreCase("--ceo-ontology") && args.length>(i+1)){
@@ -67,6 +69,9 @@ public class MentionReader {
             }
             else if (arg.equalsIgnoreCase("--ontology-depth") && args.length>(i+1)){
                 deep = Integer.parseInt(args[i+1]);
+            }
+            else if (arg.equalsIgnoreCase("--rule") && args.length>(i+1)){
+                rule = Integer.parseInt(args[i+1]);
             }
             else if (arg.equalsIgnoreCase("--property-threshold") && args.length>(i+1)){
                 threshold = Integer.parseInt(args[i+1]);
@@ -87,29 +92,37 @@ public class MentionReader {
             else if (arg.equalsIgnoreCase("--debug")){
                 DEBUG = true;
             }
-            else if (arg.equalsIgnoreCase("--gold")){
-                GOLD = true;
-            }
             else {
             }
         }
 
-        if (!chainpath.isEmpty()) {
-            METHOD = 1;
-            chains = NarrativeChains.getNarrativeChains(chainpath);
-            verbs = NarrativeChains.buildVerbIndex(chains);
-            System.out.println("chains.size() = " + chains.size());
-            System.out.println("verbs.size() = " + verbs.size());
+        if (METHOD==1) {
+            if (!pathToCeo.isEmpty() && !lexiconPath.isEmpty()) {
+                ceoPathFinder.readLexiconFile(new File(lexiconPath));
+                ceoPathFinder.readOwlFile(pathToCeo);
+                ceoPathFinder.setDuring(true);
+                ceoPathFinder.setRule(0); //// property predicate only
+                ceoPathFinder.setInheritanceDepth(deep);
+            }
+            else {
+                if (pathToCeo.isEmpty()) System.err.println("No CEO ontology provided");
+                if (lexiconPath.isEmpty()) System.err.println("No CEO lexicon provided");
+            }
         }
-        else if (!pathToCeo.isEmpty()) {
-            METHOD = 0;
-            ceoPathFinder.readLexiconFile(new File(lexiconPath));
-            ceoPathFinder.readOwlFile(pathToCeo);
-            ceoPathFinder.setDuring(true);
-            ceoPathFinder.setRule(0); //// property predicate only
-            ceoPathFinder.setInheritanceDepth(deep);
+        else if (METHOD==2) {
+            if (!chainpath.isEmpty() && METHOD == 2) {
+                chains = NarrativeChains.getNarrativeChains(chainpath);
+                verbs = NarrativeChains.buildVerbIndex(chains);
+                System.out.println("chains.size() = " + chains.size());
+                System.out.println("verbs.size() = " + verbs.size());
+            }
+            else {
+                System.err.println("No narrative chains provided");
+            }
         }
+        else {
 
+        }
 
          ArrayList<File> files = makeRecursiveFileList(new File(mentionFolder), ".eval");
          for (int i = 0; i < files.size(); i++) {
@@ -121,19 +134,16 @@ public class MentionReader {
             ArrayList<Mention> mentions = new ArrayList<Mention>();
             mentionInstanceMap = new HashMap<String, ArrayList<String>>();
             instancMentionMap = new HashMap<String, ArrayList<String>>();
-            if (GOLD) {
-                gold = readFileToGoldList(file);
-                mentions = getMentionsFromGold(gold);
-            }
-            else {
-               mentions = readFileToMentionList(file);
-            }
+            gold = readFileToGoldList(file);
+            mentions = getMentionsFromGold(gold);
+
+            //  mentions = readFileToMentionList(file);  /// @deprecated
 
             /////// BASELINE //////////////
-            if (BASELINE) {
+            if (METHOD ==0) {
                 String ceoResultB1 = sameSentenceMentionBaselineMatch(mentions);
                 try {
-                    OutputStream fos = new FileOutputStream(outputFolder+"/"+file.getName() + ".bl1");
+                    OutputStream fos = new FileOutputStream(outputFolder+"/"+file.getName() + ".bl1S");
                     fos.write(ceoResultB1.getBytes());
                     fos.close();
                 } catch (IOException e) {
@@ -142,7 +152,7 @@ public class MentionReader {
 
                 String ceoResultB3 = twoSentenceMentionBaselineMatch(mentions);
                 try {
-                    OutputStream fos = new FileOutputStream(outputFolder+"/"+file.getName() + ".bl3");
+                    OutputStream fos = new FileOutputStream(outputFolder+"/"+file.getName() + ".bl3S");
                     fos.write(ceoResultB3.getBytes());
                     fos.close();
                 } catch (IOException e) {
@@ -150,7 +160,7 @@ public class MentionReader {
                 }
                 String ceoResultB5 = fourSentenceMentionBaselineMatch(mentions);
                 try {
-                    OutputStream fos = new FileOutputStream(outputFolder+"/"+file.getName() + ".bl5");
+                    OutputStream fos = new FileOutputStream(outputFolder+"/"+file.getName() + ".bl5S");
                     fos.write(ceoResultB5.getBytes());
                     fos.close();
                 } catch (IOException e) {
@@ -158,14 +168,14 @@ public class MentionReader {
                 }
                 String ceoResultBAny = allMentionBaselineMatch(mentions);
                 try {
-                    OutputStream fos = new FileOutputStream(outputFolder+"/"+file.getName() + ".blany");
+                    OutputStream fos = new FileOutputStream(outputFolder+"/"+file.getName() + ".blANY");
                     fos.write(ceoResultBAny.getBytes());
                     fos.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
              }
-             if (METHOD==0) {
+             else if (METHOD==1) {  /// CEO
                  String ceoResultAny = anyMentionCeoMatch(mentions, threshold);
                  try {
                      OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".ceoANY");
@@ -201,7 +211,7 @@ public class MentionReader {
                      e.printStackTrace();
                  }
              }
-             else if (METHOD == 1) {
+             else if (METHOD == 2) {  /// NarrativeChains
                  String ceoResultAny = anyMentionNarrativeChainMatch(mentions, threshold);
                  try {
                      OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".ncANY");
@@ -236,6 +246,12 @@ public class MentionReader {
                  } catch (IOException e) {
                      e.printStackTrace();
                  }
+             }
+             else if (METHOD==3) { //FBK PRO cause
+
+             }
+             else if (METHOD==4) { //FrameNet cause
+
              }
          }
 

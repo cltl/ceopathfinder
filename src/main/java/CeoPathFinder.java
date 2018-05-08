@@ -591,7 +591,6 @@ public class CeoPathFinder {
     public String getRuleEffect (RDFNode rdfNode) {
         String ruleEffect = "";
         Individual resourceClass = ontologyModel.getIndividual(rdfNode.toString());
-
         String valueString = "";
         String propertyString = "";
         String subjectString = "";
