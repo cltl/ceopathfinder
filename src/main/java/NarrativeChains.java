@@ -110,8 +110,9 @@ public class NarrativeChains {
                         chainId++;
                         ArrayList<String> verbsArrayList = new ArrayList<String>();
                         String [] verbs = inputLine.split(" ");
-                        for (int i = 0; i < verbs.length; i++) {
+                        for (int i = 1; i < verbs.length; i++) {
                             String verb = verbs[i];
+                            if (verb.endsWith("\\")) verb = verb.substring(0, verb.length()-1);
                             verbsArrayList.add(verb);
                         }
                         NarrativeChain narrativeChain = new NarrativeChain(chainId.toString(), verbsArrayList);

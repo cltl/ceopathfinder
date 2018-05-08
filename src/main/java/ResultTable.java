@@ -1,5 +1,8 @@
 import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ResultTable {
 
@@ -18,6 +21,8 @@ public class ResultTable {
     static public void main (String[] args) {
         String pathToResultFolder = "";
         pathToResultFolder = args[0];
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
         try {
             String header = "";
             String pstrict ="Precision strict";
@@ -66,7 +71,7 @@ public class ResultTable {
                     System.out.println("Cannot find file = " + file.getAbsolutePath());
                 }
             }
-            String result = header+"\n";
+            String result = dateFormat.format(date)+header+"\n";
             result += pstrict+"\n";
             result += rstrict+"\n";
             result += fstrict+"\n";

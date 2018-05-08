@@ -2,6 +2,8 @@ NarrativeChain.class
 GoldMentions.class
 Mention.class
 Gold.class
+ResultTable.class
+Util.class
 CeoPathFinder.class
 Mention$tokenComparator.class
 NarrativeChains.class
