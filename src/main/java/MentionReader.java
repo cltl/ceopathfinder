@@ -124,7 +124,7 @@ public class MentionReader {
 
         }
 
-         ArrayList<File> files = makeRecursiveFileList(new File(mentionFolder), ".eval");
+         ArrayList<File> files = Util.makeRecursiveFileList(new File(mentionFolder), ".eval");
          for (int i = 0; i < files.size(); i++) {
             File file = files.get(i);
             //if (!file.getName().equals("19_1ecb.xml_all_event_mentions.eval"))  continue;
@@ -275,26 +275,35 @@ public class MentionReader {
         if (matches1.size() > matches2.size()) {
             key = mention1.toString() + mention2.toString();
             str = mention1.toString() + "\t" + mention2.toString() + "\tHCPE";
-            if (DEBUG) str += "\t"  + matches1.toString();
+            str += "\t"  + matches1.toString();
         }
         else if (matches2.size() > matches1.size()) {
             key = mention2.toString() + mention1.toString();
             str = mention2.toString() + "\t" + mention1.toString() + "\tHCPE";
-            if (DEBUG) str += "\t" + matches2.toString();
+            str += "\t" + matches2.toString();
         }
         //// token fallback
         else if (mention1.getToken() < mention2.getToken()) {
             key = mention1.toString() + mention2.toString();
             str = mention1.toString() + "\t" + mention2.toString() + "\tHCPE";
-            if (DEBUG) str += "\t" + matches1.toString();
+            str += "\t" + matches1.toString();
         }
         else if (mention2.getToken() < mention1.getToken()) {
             key = mention2.toString() + mention1.toString();
             str = mention2.toString() + "\t" + mention1.toString() + "\tHCPE";
-            if (DEBUG) str += "\t" + matches2.toString();
+            str += "\t" + matches2.toString();
         }
+        addResult(keyResults, mention1, mention2, str, key);
+    }
+
+    static void addResult (HashMap<String, ArrayList<String>> keyResults,
+                           Mention mention1,
+                           Mention mention2,
+                           String result,
+                           String key) {
+
         String instance  = getSharedInstance(mention1.toString(), mention2.toString());
-        if (!str.isEmpty() && !instance.isEmpty()) {
+        if (!result.isEmpty() && !instance.isEmpty()) {
             if (keyResults.containsKey(instance)) {
                 ArrayList<String> results = keyResults.get(instance);
                 boolean match = false;
@@ -306,47 +315,58 @@ public class MentionReader {
                     }
                 }
                 if (!match) {
-                    results.add(str);
+                    results.add(result);
                     keyResults.put(instance, results);
                 }
             }
             else {
                 ArrayList<String> results = new ArrayList<String>();
-                results.add(str);
+                results.add(result);
                 keyResults.put(instance, results);
             }
         }
     }
 
-    static void addNarrativeChainResult(HashMap<String, ArrayList<String>> keyResults, Mention mention1, Mention mention2) {
+    static void addNarrativeChainResult(HashMap<String, ArrayList<String>> keyResults,
+                                        Mention mention1,
+                                        Mention mention2,
+                                        String chainId) {
+        String str = "";
+        String key = "";
+        String chain = chains.get(chainId).eventLemmas.toString();
+       // System.out.println("DEBUG = " + DEBUG);
+        //// token fallback
+        if (mention1.getToken() < mention2.getToken()) {
+            key = mention1.toString() + mention2.toString();
+            str = mention1.toString() + "\t" + mention2.toString() + "\tHCPE";
+            str += "\t" + chain;
+        }
+        else if (mention2.getToken() < mention1.getToken()) {
+            key = mention2.toString() + mention1.toString();
+            str = mention2.toString() + "\t" + mention1.toString() + "\tHCPE";
+            str += "\t" + chain;
+        }
+        addResult(keyResults, mention1, mention2, str, key);
+    }
+
+    static void addBaselineResult(HashMap<String, ArrayList<String>> keyResults,
+                                        Mention mention1,
+                                        Mention mention2) {
         String str = "";
         String key = "";
        // System.out.println("DEBUG = " + DEBUG);
-        key = mention1.toString() + mention2.toString();
-        str = mention1.toString() + "\t" + mention2.toString() + "\tHCPE";
-        String instance  = getSharedInstance(mention1.toString(), mention2.toString());
-        if (!str.isEmpty() && !instance.isEmpty()) {
-            if (keyResults.containsKey(instance)) {
-                ArrayList<String> results = keyResults.get(instance);
-                boolean match = false;
-                for (int i = 0; i < results.size(); i++) {
-                    String s =  results.get(i);
-                    if (s.startsWith(key)) {
-                        match = true;
-                        break;
-                    }
-                }
-                if (!match) {
-                    results.add(str);
-                    keyResults.put(instance, results);
-                }
-            }
-            else {
-                ArrayList<String> results = new ArrayList<String>();
-                results.add(str);
-                keyResults.put(instance, results);
-            }
+        //// token fallback
+        if (mention1.getToken() < mention2.getToken()) {
+            key = mention1.toString() + mention2.toString();
+            str = mention1.toString() + "\t" + mention2.toString() + "\tHCPE";
+            str += "\t" + "BASELINE";
         }
+        else if (mention2.getToken() < mention1.getToken()) {
+            key = mention2.toString() + mention1.toString();
+            str = mention2.toString() + "\t" + mention1.toString() + "\tHCPE";
+            str += "\t" + "BASELINE";
+        }
+        addResult(keyResults, mention1, mention2, str, key);
     }
 
     static String getSharedInstance (String m1, String m2) {
@@ -365,7 +385,13 @@ public class MentionReader {
         return instance;
     }
 
-
+    /**
+     * We create the result by combining the instance key with the result,
+     * Next we check if there are other mentions missed which have that key too
+     * These are added as well.
+     * @param keyResults
+     * @return
+     */
     static String makeResult (HashMap<String, ArrayList<String>> keyResults) {
        String total = "";
         for (Map.Entry<String, ArrayList<String>> entry : keyResults.entrySet()) {
@@ -378,6 +404,7 @@ public class MentionReader {
                     total += result;
                 }
             }
+            //// Get all the gold results for this instance
             if (instancMentionMap.containsKey(entry.getKey())) {
                 ArrayList<String> expand = instancMentionMap.get(entry.getKey());
                 for (int i = 0; i < expand.size(); i++) {
@@ -391,7 +418,9 @@ public class MentionReader {
                         }
                     }
                     if (!match) {
-                        String result = s + "\n";
+                        /// if there is not match with the system results
+                        /// this pair is added
+                        String result = s + "\t"+"[coreferential match]"+"\n";
                         if (total.indexOf(result) == -1) {
                             total += result;
                         }
@@ -545,7 +574,7 @@ public class MentionReader {
                             for (int k = 0; k < ids1.size(); k++) {
                                 String id = ids1.get(k);
                                 if (ids2.contains(id)) {
-                                    addNarrativeChainResult(keyResults, mention1, mention2);
+                                    addNarrativeChainResult(keyResults, mention1, mention2, id);
                                 }
                             }
                         }
@@ -576,7 +605,7 @@ public class MentionReader {
                                 for (int k = 0; k < ids1.size(); k++) {
                                     String id = ids1.get(k);
                                     if (ids2.contains(id)) {
-                                        addNarrativeChainResult(keyResults, mention1, mention2);
+                                        addNarrativeChainResult(keyResults, mention1, mention2, id);
                                     }
                                 }
                             }
@@ -609,7 +638,7 @@ public class MentionReader {
                                 for (int k = 0; k < ids1.size(); k++) {
                                     String id = ids1.get(k);
                                     if (ids2.contains(id)) {
-                                        addNarrativeChainResult(keyResults, mention1, mention2);
+                                        addNarrativeChainResult(keyResults, mention1, mention2, id);
                                     }
                                 }
                             }
@@ -624,7 +653,7 @@ public class MentionReader {
 
     static String fourSentenceMentionNarrativeChainMatch (ArrayList<Mention> mentions, Integer threshold) {
          String result = "";
-        HashMap<String, ArrayList<String>> keyResults = new HashMap<String, ArrayList<String>>();
+         HashMap<String, ArrayList<String>> keyResults = new HashMap<String, ArrayList<String>>();
          for (int i = 0; i < mentions.size(); i++) {
              Mention mention1 = mentions.get(i);
              if (verbs.containsKey(mention1.getWord().toLowerCase())) {
@@ -647,7 +676,7 @@ public class MentionReader {
                                  for (int k = 0; k < ids1.size(); k++) {
                                      String id = ids1.get(k);
                                      if (ids2.contains(id)) {
-                                         addNarrativeChainResult(keyResults, mention1, mention2);
+                                         addNarrativeChainResult(keyResults, mention1, mention2, id);
                                      }
                                  }
                              }
@@ -662,7 +691,7 @@ public class MentionReader {
 
     static String sameSentenceMentionBaselineMatch (ArrayList<Mention> mentions) {
         String result = "";
-        ArrayList<String> results = new ArrayList<String>();
+        HashMap<String, ArrayList<String>> keyResults = new HashMap<String, ArrayList<String>>();
         for (int i = 0; i < mentions.size(); i++) {
             Mention mention1 = mentions.get(i);
             for (int j = 0; j < mentions.size(); j++) {
@@ -671,30 +700,18 @@ public class MentionReader {
                         ) {
                     if (!mention1.getTokenString().equals(mention2.getTokenString()) &&
                             !mention1.getWord().equalsIgnoreCase(mention2.getWord())) {
-                        String str = "";
-                        if (mention1.getToken()<mention2.getToken()){
-                            str = mention1.toString() + "\t" + mention2.toString() + "\tHCPE";
-                        }
-                        else if (mention2.getToken()<mention1.getToken()) {
-                            str = mention2.toString() + "\t" + mention1.toString() + "\tHCPE";
-                        }
-                        if (!str.isEmpty()) {
-                            if (!results.contains(str)) results.add(str);
-                        }
+                        addBaselineResult(keyResults, mention1, mention2);
                     }
                 }
             }
         }
-        for (int i = 0; i < results.size(); i++) {
-            String r = results.get(i);
-            result += i + "\t"+r+"\n";
-        }
+        result = makeResult (keyResults);
         return result;
     }
 
     static String twoSentenceMentionBaselineMatch (ArrayList<Mention> mentions) {
         String result = "";
-        ArrayList<String> results = new ArrayList<String>();
+        HashMap<String, ArrayList<String>> keyResults = new HashMap<String, ArrayList<String>>();
         for (int i = 0; i < mentions.size(); i++) {
             Mention mention1 = mentions.get(i);
             for (int j = 0; j < mentions.size(); j++) {
@@ -705,30 +722,18 @@ public class MentionReader {
                         ) {
                     if (!mention1.getTokenString().equals(mention2.getTokenString()) &&
                             !mention1.getWord().equalsIgnoreCase(mention2.getWord())) {
-                        String str = "";
-                        if (mention1.getToken()<mention2.getToken()){
-                            str = mention1.toString() + "\t" + mention2.toString() + "\tHCPE";
-                        }
-                        else if (mention2.getToken()<mention1.getToken()) {
-                            str = mention2.toString() + "\t" + mention1.toString() + "\tHCPE";
-                        }
-                        if (!str.isEmpty()) {
-                            if (!results.contains(str)) results.add(str);
-                        }
+                        addBaselineResult(keyResults, mention1, mention2);
                     }
                 }
             }
         }
-        for (int i = 0; i < results.size(); i++) {
-            String r = results.get(i);
-            result += i + "\t"+r+"\n";
-        }
+        result = makeResult (keyResults);
         return result;
     }
 
     static String fourSentenceMentionBaselineMatch (ArrayList<Mention> mentions) {
         String result = "";
-        ArrayList<String> results = new ArrayList<String>();
+        HashMap<String, ArrayList<String>> keyResults = new HashMap<String, ArrayList<String>>();
         for (int i = 0; i < mentions.size(); i++) {
             Mention mention1 = mentions.get(i);
             for (int j = 0; j < mentions.size(); j++) {
@@ -741,53 +746,29 @@ public class MentionReader {
                         ) {
                     if (!mention1.getTokenString().equals(mention2.getTokenString()) &&
                             !mention1.getWord().equalsIgnoreCase(mention2.getWord())) {
-                        String str = "";
-                        if (mention1.getToken()<mention2.getToken()){
-                            str = mention1.toString() + "\t" + mention2.toString() + "\tHCPE";
-                        }
-                        else if (mention2.getToken()<mention1.getToken()) {
-                            str = mention2.toString() + "\t" + mention1.toString() + "\tHCPE";
-                        }
-                        if (!str.isEmpty()) {
-                            if (!results.contains(str)) results.add(str);
-                        }
+                        addBaselineResult(keyResults, mention1, mention2);
                     }
                 }
             }
         }
-        for (int i = 0; i < results.size(); i++) {
-            String r = results.get(i);
-            result += i + "\t"+r+"\n";
-        }
+        result = makeResult (keyResults);
         return result;
     }
 
     static String allMentionBaselineMatch (ArrayList<Mention> mentions) {
         String result = "";
-        ArrayList<String> results = new ArrayList<String>();
+        HashMap<String, ArrayList<String>> keyResults = new HashMap<String, ArrayList<String>>();
         for (int i = 0; i < mentions.size(); i++) {
             Mention mention1 = mentions.get(i);
             for (int j = 0; j < mentions.size(); j++) {
                 Mention mention2 = mentions.get(j);
                 if (!mention1.getTokenString().equals(mention2.getTokenString()) &&
                         !mention1.getWord().equalsIgnoreCase(mention2.getWord())) {
-                    String str = "";
-                    if (mention1.getToken()<mention2.getToken()){
-                        str = mention1.toString() + "\t" + mention2.toString() + "\tHCPE";
-                    }
-                    else if (mention2.getToken()<mention1.getToken()) {
-                        str = mention2.toString() + "\t" + mention1.toString() + "\tHCPE";
-                    }
-                    if (!str.isEmpty()) {
-                        if (!results.contains(str)) results.add(str);
-                    }
+                    addBaselineResult(keyResults, mention1, mention2);
                 }
             }
         }
-        for (int i = 0; i < results.size(); i++) {
-            String r = results.get(i);
-            result += i + "\t"+r+"\n";
-        }
+        result = makeResult (keyResults);
         return result;
     }
 
@@ -899,29 +880,4 @@ public class MentionReader {
     }
 
 
-    static public ArrayList<File> makeRecursiveFileList(File inputFile, String theFilter) {
-        ArrayList<File> acceptedFileList = new ArrayList<File>();
-        File[] theFileList = null;
-        if ((inputFile.canRead())) {
-            theFileList = inputFile.listFiles();
-            for (int i = 0; i < theFileList.length; i++) {
-                File newFile = theFileList[i];
-                if (newFile.isDirectory()) {
-                    ArrayList<File> nextFileList = makeRecursiveFileList(newFile, theFilter);
-                    acceptedFileList.addAll(nextFileList);
-                } else {
-                    if (newFile.getName().endsWith(theFilter)) {
-                        acceptedFileList.add(newFile);
-                    }
-                }
-               // break;
-            }
-        } else {
-            System.out.println("Cannot access file:" + inputFile + "#");
-            if (!inputFile.exists()) {
-                System.out.println("File/folder does not exist!");
-            }
-        }
-        return acceptedFileList;
-    }
 }
