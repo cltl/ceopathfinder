@@ -21,9 +21,17 @@ public class ResultTable {
      */
     static public void main (String[] args) {
         String pathToResultFolder = "";
-        //pathToResultFolder = args[0];
-        pathToResultFolder = "/Users/piek/Desktop/Roxane/Tommaso-v5";
+        String label = "";
+        for (int i = 0; i < args.length; i++) {
+            String arg = args[i];
+            //System.out.println("parameter value = " + arg);
 
+            if (arg.equalsIgnoreCase("--input") && args.length > (i + 1)) {
+                pathToResultFolder = args[i + 1];
+            } else if (arg.equalsIgnoreCase("--label") && args.length > (i + 1)) {
+                label = args[i + 1];
+            }
+        }
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
         try {
@@ -89,7 +97,7 @@ public class ResultTable {
             result += ploose+"\n";
             result += rloose+"\n";
             result += floose+"\n";
-            OutputStream fos = new FileOutputStream(pathToResultFolder+"/"+"results.csv");
+            OutputStream fos = new FileOutputStream(pathToResultFolder+"/"+label+"results.xls");
             fos.write(result.getBytes());
             fos.close();
         } catch (IOException e) {
