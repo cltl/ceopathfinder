@@ -13,6 +13,7 @@ public class MentionReader {
     static CeoPathFinder ceoPathFinder = new CeoPathFinder();
     static Integer threshold = 1;
     static int deep = 0;
+    static boolean EXPAND = false;
     static boolean DEBUG = false;
     static int METHOD = -1;   // 0 = BASELINE, 1 = CEO, 2 = NarrativeChains, 3 = FBK PRO, 4 = Framenet cause
     static public int rule = 0; // 0 = full assertion, 1 = property, 2 = subject-property, 3 = subject - property - object
@@ -53,7 +54,7 @@ public class MentionReader {
         }
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
-            System.out.println("parameter value = " + arg);
+            //System.out.println("parameter value = " + arg);
 
             if (arg.equalsIgnoreCase("--method") && args.length>(i+1)){
                 METHOD = Integer.parseInt(args[i+1]);
@@ -91,6 +92,9 @@ public class MentionReader {
             }
             else if (arg.equalsIgnoreCase("--debug")){
                 DEBUG = true;
+            }
+            else if (arg.equalsIgnoreCase("--expand")){
+                EXPAND = true;
             }
             else {
             }
@@ -404,25 +408,27 @@ public class MentionReader {
                     total += result;
                 }
             }
-            //// Get all the gold results for this instance
-            if (instancMentionMap.containsKey(entry.getKey())) {
-                ArrayList<String> expand = instancMentionMap.get(entry.getKey());
-                for (int i = 0; i < expand.size(); i++) {
-                    String s = expand.get(i);
-                    boolean match = false;
-                    for (int j = 0; j < results.size(); j++) {
-                        String s1 = entry.getKey() + "\t"+results.get(j);
-                        if (s1.startsWith(s)) {
-                            match = true;
-                            break;
+            if (EXPAND) {
+                //// Get all the gold results for this instance
+                if (instancMentionMap.containsKey(entry.getKey())) {
+                    ArrayList<String> expand = instancMentionMap.get(entry.getKey());
+                    for (int i = 0; i < expand.size(); i++) {
+                        String s = expand.get(i);
+                        boolean match = false;
+                        for (int j = 0; j < results.size(); j++) {
+                            String s1 = entry.getKey() + "\t" + results.get(j);
+                            if (s1.startsWith(s)) {
+                                match = true;
+                                break;
+                            }
                         }
-                    }
-                    if (!match) {
-                        /// if there is not match with the system results
-                        /// this pair is added
-                        String result = s + "\t"+"[coreferential match]"+"\n";
-                        if (total.indexOf(result) == -1) {
-                            total += result;
+                        if (!match) {
+                            /// if there is not match with the system results
+                            /// this pair is added
+                            String result = s + "\t" + "[coreferential match]" + "\n";
+                            if (total.indexOf(result) == -1) {
+                                total += result;
+                            }
                         }
                     }
                 }
