@@ -1,5 +1,5 @@
-/Users/piek/Desktop/Roxane/pathfinder/data/gold
-/Users/piek/Desktop/Roxane/pathfinder/data/out-narrativechains
+/Code/vu/ceopathfinder/pathfinder/data/gold
+/Code/vu/ceopathfinder/pathfinder/data/out-narrativechains
 .eval.nc3S
 Precision pairs-value strict: 0.6656626506024096
 Recall pairs-value strict: 0.020762871101089816

@@ -1,11 +1,11 @@
-/Users/piek/Desktop/Roxane/pathfinder/data/gold
-/Users/piek/Desktop/Roxane/pathfinder/data/out-ceo-intermediate2
+/Code/vu/ceopathfinder/pathfinder/data/gold
+/Code/vu/ceopathfinder/pathfinder/data/out-ceo-direct
 .eval.ceo5S
-Precision pairs-value strict: 0.6852196308484761
-Recall pairs-value strict: 0.4505597892558096
-F1 pairs-value strict: 0.5436485412646157
+Precision pairs-value strict: 0.7442403032954215
+Recall pairs-value strict: 0.24009784551698185
+F1 pairs-value strict: 0.36306729264475746
 
-Precision pairs-only: 0.7401631134640149
-Recall pairs-only: 0.4697176064650867
-F1 pairs-only: 0.5747139206754805
+Precision pairs-only: 0.7955672207640712
+Recall pairs-only: 0.2524757056918093
+F1 pairs-only: 0.38330757341576505
 

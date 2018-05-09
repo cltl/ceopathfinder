@@ -51,20 +51,20 @@ OUT=$BASE/data/out-ceo-intermediate1
 
 java -Xmx812m -cp $BIN MentionReader --method 1 --property-threshold 1 --ontology-depth 1 --ceo-lexicon $CEOLEX --ceo-ontology $CEO --debug --input $IN --output $OUT --intermediate 1 --$EXPAND
 
-python eval_script-20180323.py $IN $OUT .eval.ceo1S > out.eval.ceo1S
-python eval_script-20180323.py $IN $OUT .eval.ceo3S > out.eval.ceo3S
-python eval_script-20180323.py $IN $OUT .eval.ceo5S > out.eval.ceo5S
-python eval_script-20180323.py $IN $OUT .eval.ceoANY > out.eval.ceoANY
+python eval_script-20180323.py $IN $OUT .eval.ceo1S > out.eval.ceo1Si1
+python eval_script-20180323.py $IN $OUT .eval.ceo3S > out.eval.ceo3Si1
+python eval_script-20180323.py $IN $OUT .eval.ceo5S > out.eval.ceo5Si1
+python eval_script-20180323.py $IN $OUT .eval.ceoANY > out.eval.ceoANYi1
 
 #intermediate 2
 OUT=$BASE/data/out-ceo-intermediate2
 
 java -Xmx812m -cp $BIN MentionReader --method 1 --property-threshold 1 --ontology-depth 1 --ceo-lexicon $CEOLEX --ceo-ontology $CEO --debug --input $IN --output $OUT --intermediate 2 --$EXPAND
 
-python eval_script-20180323.py $IN $OUT .eval.ceo1S > out.eval.ceo1S
-python eval_script-20180323.py $IN $OUT .eval.ceo3S > out.eval.ceo3S
-python eval_script-20180323.py $IN $OUT .eval.ceo5S > out.eval.ceo5S
-python eval_script-20180323.py $IN $OUT .eval.ceoANY > out.eval.ceoANY
+python eval_script-20180323.py $IN $OUT .eval.ceo1S > out.eval.ceo1Si2
+python eval_script-20180323.py $IN $OUT .eval.ceo3S > out.eval.ceo3Si2
+python eval_script-20180323.py $IN $OUT .eval.ceo5S > out.eval.ceo5Si2
+python eval_script-20180323.py $IN $OUT .eval.ceoANY > out.eval.ceoANYi2
 
 # Narrative chains
 OUT=$BASE/data/out-narrativechains

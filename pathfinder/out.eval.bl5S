@@ -1,5 +1,5 @@
-/Users/piek/Desktop/Roxane/pathfinder/data/gold
-/Users/piek/Desktop/Roxane/pathfinder/data/out-baseline
+/Code/vu/ceopathfinder/pathfinder/data/gold
+/Code/vu/ceopathfinder/pathfinder/data/out-baseline
 .eval.bl5S
 Precision pairs-value strict: 0.5284234396742772
 Recall pairs-value strict: 0.9649882352941177
