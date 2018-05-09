@@ -2,6 +2,7 @@ import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 
 public class ResultTable {
@@ -20,7 +21,9 @@ public class ResultTable {
      */
     static public void main (String[] args) {
         String pathToResultFolder = "";
-        pathToResultFolder = args[0];
+        //pathToResultFolder = args[0];
+        pathToResultFolder = "/Users/piek/Desktop/Roxane/Tommaso-v5";
+
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
         try {
@@ -32,10 +35,13 @@ public class ResultTable {
             String rloose ="Recall loose";
             String floose ="F1 loose";
             ArrayList<File> files = Util.makeRecursiveFileListStart(new File(pathToResultFolder), "out.eval.");
+            Collections.sort(files);
             for (int i = 0; i < files.size(); i++) {
                 File file = files.get(i);
                 if (file.exists()) {
-                        header = "\t"+file.getName();
+                        String name = file.getName();
+                        name = name.substring(name.lastIndexOf(".")+1);
+                        header += "\t"+name;
                         FileInputStream fis = new FileInputStream(file);
                         InputStreamReader isr = new InputStreamReader(fis);
                         BufferedReader in = new BufferedReader(isr);
@@ -43,8 +49,13 @@ public class ResultTable {
                         while (in.ready() && (inputLine = in.readLine()) != null) {
                             if (inputLine.trim().length() > 0) {
                                 String [] fields = inputLine.split(":");
-                                if (fields.length==2) {
-                                    Double score = Double.parseDouble(fields[1].trim());
+                                if (fields.length>1) {
+                                    Double score = null;
+                                    try {
+                                        score = Double.parseDouble(fields[1].trim());
+                                    } catch (NumberFormatException e) {
+                                        e.printStackTrace();
+                                    }
                                     if (inputLine.startsWith("Precision pairs-value strict")) {
                                        pstrict+="\t"+score.toString();
                                     }
