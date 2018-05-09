@@ -1,0 +1,795 @@
+abandoned	/M	
+abortion	Surgery	
+abuse	/B	
+abused	/B	
+abuses	/B	
+accident	/B	
+accidents	/B	
+accomplice	/O	
+accusations	/M	
+accused	/M	
+acquittals	Trial	
+acquitted	Trial	
+aftershock	Earthquake	
+aftershocks	Earthquake	
+aid	Helping	
+airstrike	Attacking	
+alarm	/M	
+alert	/M	
+alerted	/M	
+alerting police	/M	
+Alzheimer s disease	HavingAMedicalCondition	
+amassed	Meeting	
+animal cruelty	IntentionalInjuring	
+appeal	Trial	
+apprehended	Arresting	
+apprehending	Arresting	
+armed	BeingArmed	
+arraigned	Trial	
+arraignment	Trial	
+arrest	Arresting	
+arrested	Arresting	
+arresting	Arresting	
+arrests	Arresting	
+arson	Arson	
+assassinate	Murder	
+assassination	Murder	
+assault	Attacking	
+assaulted	Attacking	
+assaulting	Attacking	
+assaults	Attacking	
+attack	Attacking	
+attacked	Attacking	
+attacking	Attacking	
+attacks	Attacking	
+autopsy	BeingDead	
+bailout	FinancialTransaction	
+bankrupt	/M	
+bankruptcy	/M	
+barricaded	Blockade	
+barricading	Blockade	
+battered	Impacting	
+battle	Battle	
+battled	Battle	
+battles	Battle	
+beat	IntentionalInjuring	IntentionalDamaging
+beaten	IntentionalInjuring	IntentionalDamaging
+beating	IntentionalInjuring	IntentionalDamaging
+betrayed	/M	
+betraying	/M	
+blacked	BeingDamaged	
+blackout	Injuring	Damaging
+blast	Explosion	
+blasted	Explosion	
+blaze	Fire	
+bleeding	Bleeding	
+blew	Impacting	
+blocked	Blockade	
+bloodshed	Bleeding	
+blow	Impacting	
+blow out windows)	Damaging	
+bombardment	Bombing	
+bombardments	Bombing	
+bombed	Bombing	
+bombing	Bombing	
+bombings	Bombing	
+bombs	Bombing	
+bonfires	Fire	
+brain-damaged	HavingAMedicalCondition	
+brandished	AimingWeapon	
+brandishing	AimingWeapon	
+break	Damaging	IntentionalDamaging
+break - in	Robbing	
+break up	EndingARelationship	
+break-in	Robbing	
+break-ins	Robbing	
+breakdown	BeingDamaged	BeingInjured
+breaking	Damaging	IntentionalDamaging
+breaking ceasefire	Shooting	
+breaks	Damaging	IntentionalDamaging
+breaks out	Escaping	
+bribe	FinancialTransaction	
+bribery	FinancialTransaction	
+bribing	FinancialTransaction	
+bribing	FinancialTransaction	
+broke	Damaging	IntentionalDamaging
+broken	Damaging	IntentionalDamaging
+brought down	/P	
+burglary	Robbing	
+buried	Funeral	
+burned	Fire	
+burning	Fire	
+burns	Fire	
+Burns Down	Fire	
+burnt	Fire	
+burst	Explosion	
+burst out	Explosion	
+bust	/P	
+cable break	BeingDamaged	
+call	/O	
+call 911	/M	
+call emergencies	/M	
+called	/O	
+called to	/O	
+calls	/O	
+cancer	HavingAMedicalCondition	
+capture	Capturing	
+captured	Capturing	
+captures	Capturing	
+capturing	Capturing	
+carjackings	Hijacking	
+carnage	Killing	
+casualties	BeingInjured	BeingDead
+catch	Capturing	
+catching	Capturing	
+caught	Capturing	
+caught fire	Fire	
+cease-fire	Shooting	
+charge	Arresting	Trial
+charged	Arresting	Trial
+charges	Arresting	Trial
+chase	Translocation	
+chased	Translocation	
+choke	Asphyxiation	
+choked	Asphyxiation	
+clashed	Attacking	
+clashes	Attacking	
+cleaned out	Cleaning	
+collapse	Collapsing	
+collapsed	Collapsing	
+collapsing	Collapsing	
+collide	Impacting	
+coma	HavingAMedicalCondition	
+condemnation	Punishing	
+condemned	Punishing	
+confessed	/M	
+confined	Confining	
+confiscated	UnilateralGetting	
+confiscating	UnilateralGetting	
+conflagration	Fire	
+conflict	ViolentContest	
+confrontation	ViolentContest	
+confronted	/O	
+congestion	Blockade	
+congestive heart failure	HavingAMedicalCondition	
+conspiracy	/M	
+conspired	/M	
+conspiring	/M	
+contends	ViolentContest	
+Convicted	Trial	
+convicted	Trial	
+convicting	Trial	
+conviction	Trial	
+convictions	Trial	
+cordoned	Blockade	
+cordoned off	Blockade	
+coronary artery disease	HavingAMedicalCondition	
+crack	Damaging	
+crackdown	StoppingAnActivity	
+cracking	Damaging	
+crackled	Fire	
+crash	Crashing	
+crashed	Crashing	
+crime	/B	
+crimes	/B	
+crippled	HavingAMedicalCondition	
+crisis	/B	
+crossfire	Shooting	
+crossing border refugees)	Fleeing	
+cuffed	Arresting	
+custody	Confining	
+cut	Cutting	Decreasing
+cut into pieces boys	Injuring	IntentionalInjuring
+cuts	Cutting	Decreasing
+cutting	Cutting	Decreasing
+damage	BeingDamaged	
+Damaged	Damaging	IntentionalDamaging
+damaged	Damaging	IntentionalDamaging
+damages	Damaging	IntentionalDamaging
+damaging	Damaging	IntentionalDamaging
+dead	BeingDead	
+deadlocked	/O	
+death	BeingDead	
+death sentence	Trial	
+deaths	BeingDead	
+deaths	BeingDead	
+decimated	Decreasing	
+defected	Leaving	
+defections	Leaving	
+defend	/M	
+defrauded	/N	
+dementia	HavingAMedicalCondition	
+demolished	Destroying	IntentionalDestroying
+demonstrated	Demonstration	
+demonstration	Demonstration	
+demonstrations	Demonstration	
+deported	Transportation	
+derail	Derailing	
+deserted	Leaving	
+destroy	Destroying	IntentionalDestroying
+destroyed	Destroying	IntentionalDestroying
+destroying	Destroying	IntentionalDestroying
+Destroys	Destroying	IntentionalDestroying
+destroys	Destroying	IntentionalDestroying
+destruction	Destroying	IntentionalDestroying
+detained	Imprisoning	
+detonate	Explosion	
+detonated	Explosion	
+devastated	BeingDamaged	
+devastating	BeingDamaged	
+devastation	Damaging	
+diagnosed	HavingAMedicalCondition	
+die	Dying	
+died	Dying	
+dies	Dying	
+disappeared	BeingDisappeared	
+disappearing	BeingDisappeared	
+disarm	BeingArmed	
+disarmed	BeingArmed	
+disaster	/B	
+discharged	/P	
+disciplinary action	Punishing	
+disease	HavingAMedicalCondition	
+disorder	HavingAMedicalCondition	
+disperse	Distribution	
+dispersed	Distribution	
+disrupted	Damaging	
+disrupted services	Damaging	
+disrupting	Damaging	
+disruption	Damaging	
+disrupts	Damaging	
+distributed	Distribution	
+divorced	EndingARelationship	
+divorcing	EndingARelationship	
+downtime	BeingDamaged	
+drilling	/O	
+drink- driving	/M	
+driving	Translocation	
+driving under influence	/M	
+driving under the influence	/M	
+dropped	Falling	
+dropping	Falling	
+drove	Translocation	
+drove off	Leaving	
+drunk	/O	
+drunk driving	/M	
+drunken driving	/M	
+DUI	/M	
+DWI	/M	
+dying	Dying	
+earthquake	Earthquake	
+earthquakes	Earthquake	
+eliminated	Destroying	
+eluding	Escaping	
+emptied	Removing	
+engulfed	Flooding	
+engulfing	Flooding	
+entered	Arriving	
+Erupt	VolcanicEruption	
+erupted	VolcanicEruption	
+escape	Escaping	
+escaped	Escaping	
+escaping	Escaping	
+escorted	Transportation	
+escorting	Translocation	
+evacuate	Evacuation	
+evacuated	Evacuation	
+evacuating	Evacuation	
+evacuation	Evacuation	
+examining	Investigating	
+execute	IntentionalKilling	
+executed	IntentionalKilling	
+execution	IntentionalKilling	
+executions	IntentionalKilling	
+explode	Explosion	
+exploded	Explosion	
+explosion	Explosion	
+explosions	Explosion	
+extinguish	Destroying	
+extinguished	Destroying	
+extort	Robbing	
+extorted	Robbing	
+extortion	Robbing	
+extortions	Robbing	
+failing sobriety test	/M	
+fall	Falling	
+fallen	Falling	
+falling	Falling	
+falling from mountain)	Falling	
+fallout	Damaging	BeingDamaged
+falls	Falling	
+fatally shooting	Dying	
+fell	Falling	
+fight	ViolentContest	
+fighting	ViolentContest	
+fights	ViolentContest	
+find guilty	Trial	
+finding refuge	Escaping	
+fire	Shooting	Fire
+firebombed	Attacking	
+fired	Shooting	
+fired on	Shooting	
+fires	Shooting	Fire
+firing	Shooting	LeavingAnOrganization
+firing at	Shooting	
+flames	Fire	
+flaming	Fire	
+flattened	Collapsing	
+flattening	Collapsing	
+flattening buildings	Collapsing	
+fled	Escaping	
+flee	Escaping	
+fleeing	Escaping	
+flew	Translocation	
+flooded	Flooding	
+fly	Translocation	
+flying	Translocation	
+followed	/O	
+following	/O	
+fought	ViolentContest	
+gash	BeingInjured	
+gave	Giving	
+getting away	Escaping	
+give	Giving	
+giving life sentence	Conviction	
+grab	Taking	
+grabbed	Taking	
+graze wound	BeingInjured	
+grazed	BeingInjured	
+guilty	/M	
+gunfire	Shooting	
+gunned	Impacting	
+gunned down	Impacting	
+gunning down	Impacting	
+gunpoint	AimingWeapon	
+gunshots	Shooting	
+handcuffed	Arresting	
+handcuffing	Arresting	
+hanged	\P	
+Hanging	\P	
+harassed	Intimidation	
+harm	BeingInjured	
+harming	Injuring	IntentionalInjuring
+havoc	Destroying	
+heart attack	Injuring	
+heart disease	HavingAMedicalCondition	
+heart failure	HavingAMedicalCondition	
+heist	Robbing	
+heists	Robbing	
+held hostage	HostageTaking	
+hid	\O	
+hiding	\O	
+hijack	Hijacking	
+hijacked	Hijacking	
+hijacking	Hijacking	
+hijackings	Hijacking	
+hit	Impacting	
+hit and run	Shooting	
+hit-and-run	Shooting	
+hits	Impacting	
+hitting	Impacting	
+homicide	Murder	
+homicides	Murder	
+hospitalized	Injuring	IntentionalInjuring
+hurled	Translocation	
+hurling	Translocation	
+hurt	Injuring	IntentionalInjuring
+hurts	Injuring	IntentionalInjuring
+identified	/M	
+identify	/M	
+ignite	Explosion	
+ignited	Explosion	
+ill	HavingAMedicalCondition	
+illness	BeingInjured	
+imprisoned	Imprisoning	
+imprisonment	Imprisoning	
+in custody	Confining	
+incarcerated	Imprisoning	
+incarceration	Imprisoning	
+indict	Trial	
+indicted	Trial	
+indictment	Trial	
+inferno	Fire	
+injure	Injuring	IntentionalInjuring
+injured	Injuring	BeingInjured
+injuries	BeingInjured	
+injuring	Injuring	IntentionalInjuring
+injury	Injuring	BeingInjured
+institutionalized	Confining	
+intercept	Getting	
+intercepted	Getting	
+intercepts	Getting	
+intervene	/O	
+intervened	/O	
+intoxicated	Injuring	IntentionalInjuring
+investigate	Investigating	
+investigated	Investigating	
+investigating	Investigating	
+investigation	Investigating	
+investigations	Investigating	
+jail	Imprisoning	
+jailed	Imprisoning	
+jolt	Translocation	
+jolted	Translocation	
+Jolts	Translocation	
+kidnapping	Kidnapping	
+kill 	Murder	Killing
+killed	Murder	Killing
+killer	IntentionalKilling	
+killing	Murder	Killing
+killings	Murder	Killing
+knocked down	/P	
+knocked out	/P	
+landed	Arriving	
+landing shells	Shooting	
+landslide	Landslide	
+landslides	Landslide	
+landslip	Landslide	
+larceny	Stealing	
+lawsuits	Trial	
+leading to escapee	/O	
+leave	Leaving	
+leaving	Leaving	
+leaving homes	Leaving	
+leaving the scene	Leaving	
+life in prison	Imprisoning	
+lightening	/M	
+loan - sharking	/M	
+loan sharking	/M	
+lockdown	Imprisoning	
+locked	Imprisoning	
+locked up	Imprisoning	
+looted	Plundering	
+looting	Plundering	
+making off	Leaving	
+manhunt	/M	
+Manslaughter	Murder	
+manslaughter	Murder	
+march	Translocation	
+marched	Translocation	
+marching	Translocation	
+melted	/O	
+mental illness	HavingAMedicalCondition	
+militant activity	ViolentContest	
+miscue	/O	
+misdemeanor	/B	
+misdemeanors	/B	
+mishandled	Intimidation	
+missing	BeingDisappeared	
+missing people)	BeingDisappeared	
+mistrial	Trial	
+mob related activities	/B	
+molester	Molestation	
+mortar attack	Bombing	
+mourn	/M	
+murder	Murder	
+murdered	Murder	
+murdering	Murder	
+murders	Murder	
+nab	Capturing	
+nabbed	Capturing	
+not guilty	/M	
+obstruct	Blockade	
+obstructing	Blockade	
+obstruction	Blockade	
+occupation	Occupation	
+occupied	Occupation	
+occupy	Occupation	
+offenses	/B	
+offensive	Attacking	
+offering rewards	/M	
+on probation	/M	
+on suspicion	/M	
+on the run	Escaping	
+opened fire	Shooting	
+operation	Surgery	
+operations	Surgery	
+outage	Damaging	BeingDamaged
+outages	Damaging	BeingDamaged
+overpowered	Attacking	
+overpowering	Attacking	
+pain	BeingInjured	
+pandemonium	/B	
+panic	/M	
+paralysed	HavingAMedicalCondition	
+paralyzed	HavingAMedicalCondition	
+paroled	Trial	
+passed	Translocation	Dying
+passed away	Dying	
+pat - downs	Searching	
+pat down	Searching	
+patrol	/M	
+patrolling	/M	
+patrols	/M	
+payoffs	FinancialTransaction	
+peace	/M	
+pelted	Attacking	
+pelting	Attacking	
+penalty	Punishing	
+perjury	/M	
+persecution	/M	
+piracy	Hijacking	
+pirate	Hijacking	
+plead	Trial	
+pleaded	Trial	
+pneumonia	HavingAMedicalCondition	
+pointed a gun	AimingWeapon	
+pointing	/P	
+poisoning	Injuring	IntentionalInjuring
+power outage	BeingDamaged	
+pregnant	/O	
+prison	Imprisoning	
+prison term	Imprisoning	
+probation	/M	
+prosecuted	/M	
+prosecution	/M	
+prosecutions	/M	
+protect	/M	
+protected	/M	
+protest	Demonstration	
+protesting	Demonstration	
+protests	Demonstration	
+pulled over	StoppingAnActivity	
+punched	Attacking	
+punish	Punishing	
+punished	Punishing	
+punishment	Punishing	
+quake	Earthquake	
+quakes	Earthquake	
+quarrels	/M	
+racketeering	/B	
+rackets	/B	
+raid	Attacking	
+raided	Attacking	
+rallied	Meeting	
+rallies	Meeting	
+rally	Meeting	
+rallying	Meeting	
+rammed	Impacting	
+rampage	Riot	
+rampaged	Riot	
+rampaging	Riot	
+ran	Running	
+rape	Raping	
+raped	Raping	
+rebellion	Uprising	
+rebellions	Uprising	
+rebuilding	Repairing	
+rebuilt	Repairing	
+recover	Healing	
+recovered	Healing	
+recovering	Healing	
+reeling	Falling	
+refugee	Escaping	
+release	Translocation	
+released	Translocation	
+releasing	Translocation	
+repair	Repairing	
+repaired	Repairing	
+repairs	Repairing	
+reroute	/M	
+rerouted	/M	
+rerouting	/M	
+rescue	Rescuing	
+rescue operations	Rescuing	
+rescued	Rescuing	
+rescuing	Rescuing	
+resign	LeavingAnOrganization	
+resignation	LeavingAnOrganization	
+resigned	LeavingAnOrganization	
+restoration	Repairing	
+restore	Repairing	
+restored	Repairing	
+restrained	/M	
+retaliate	Attacking	
+retaliated	Attacking	
+retaliation	Attacking	
+retire	LeavingAnOrganization	
+retired	LeavingAnOrganization	
+return	Translocation	
+returned	Translocation	
+revolt	PoliticalRevolution	
+revolution	PoliticalRevolution	
+ricochet	Impacting	
+ricochete	Impacting	
+riot	Riot	
+rioting	Riot	
+riots	Riot	
+ripped	Damaging	
+ripping	Damaging	
+robbed	Robbing	
+robberies	Robbing	
+robbery	Robbing	
+ruin	Damaging	
+run	Running	
+running	Running	
+sabotage	IntentionalDamaging	
+sank	Sinking	
+scandal	/B	
+screaming	/O	
+scrutiny	Investigating	
+search and rescue coordination	Rescuing	
+search and rescue operation	Rescuing	
+searched	Searching	
+searching	Searching	
+seeing	/O	
+seek	Searching	
+seeking	Searching	
+seeking shelter	Escaping	
+seized	UnilateralGetting	
+seizing	UnilateralGetting	
+seizing weapon	UnilateralGetting	
+self-defence	/M	
+self-defense	/M	
+sentence	Punishing	
+sentenced	Punishing	
+sentences	Punishing	
+sentencing	Punishing	
+serving time	Imprisoning	
+set alight	Arson	
+set fire	Arson	
+set on fire	Arson	
+setting fire	Arson	
+shelling	Shooting	
+Shelter	/M	
+sheltering	/M	
+shelters	/M	
+shield	/M	
+shielded	/M	
+shielding	/M	
+shock	BeingInjured	
+shocked	/M	
+shockwave	Explosion	
+shook	Motion	
+shoot	Shooting	
+shooting	Shooting	
+shooting dead	IntentionalKilling	Murder
+shooting death	IntentionalKilling	Murder
+shootings	Shooting	
+shot	Shooting	
+shots	Shooting	
+shut	StoppingAnActivity	
+shut down ,	StoppingAnActivity	
+sinking	Sinking	
+skirmishes	ViolentContest	
+slain	IntentionalKilling	Murder
+slaying	IntentionalKilling	Murder
+slayings	IntentionalKilling	Murder
+slipped	Falling	
+slipping	Falling	
+smash	Damaging	IntentionalDamaging
+smashed	Damaging	IntentionalDamaging
+smashing	Damaging	IntentionalDamaging
+smoke	Fire	
+smoking	Fire	
+smolder	Fire	
+smuggle	Smuggling	
+snapped	Damaging	
+snatched	Stealing	
+snatching	Stealing	
+sought	Searching	
+sparked	/P	
+sparking	/P	
+spate	Flooding	
+sped	Motion	
+sped off	Motion	
+speeding	/M	
+sprayed	Distribution	
+spraying	Distribution	
+spraying chemicals	ChemicalAttack	
+spread	Distribution	
+spreading	Distribution	
+spreading waves	Flooding	
+spying	/M	
+stabbed	Stabbing	
+stabbing	Stabbing	
+steal	Stealing	
+stealing	Stealing	
+stole	Stealing	
+stolen	Stealing	
+storm	Storm	
+stormed	Storm	
+strike	Attacking	Impacting
+strikes	Attacking	Impacting
+striking	Impacting	LaborStrike
+stroke	HavingAMedicalCondition	
+struck	Impacting	
+struggle	/M	
+struggling	/M	
+stuck	/O	
+succumbed	Dying	
+sued	/M	
+suffer	BeingInjured	
+suffered	BeingInjured	
+suffering	BeingInjured	
+suicide	Suicide	
+suicide attempt	Suicide	
+sunk	Sinking	
+surgery	Surgery	
+surrender	/M	
+surrendered	/M	
+survived	BeingInExistence	
+suspect	/M	
+suspected	/M	
+suspended	/P	
+suspension	/P	
+suspicion	/M	
+suspicions	/M	
+swabbed	Cleaning	
+swimming	Translocation	
+take refuge	Translocation	
+taken into custody	Arresting	Confining
+taking shelter	Translocation	
+target	/P	
+targeted	/P	
+targeting	/P	
+temblor	Earthquake	
+temblors	Earthquake	
+terrestrial break	Damaging	
+terror	/B	
+terrorism	/B	
+testified	Trial	
+testify	Trial	
+testifying	Trial	
+theft	Stealing	
+threat	Intimidation	
+threatened	Intimidation	
+threatening	Intimidation	
+threats	Intimidation	
+threw	Translocation	
+throw	Translocation	
+throwing	Translocation	
+thrown	Translocation	
+thwarted	/O	
+thwarting	/O	
+to section	Separating	
+took hostage	HostageTaking	
+took to the streets	Demonstration	
+toppled	Falling	
+torched	Arson	
+torn	Damaging	
+total loss	BeingDamaged	
+trafficking	Smuggling	
+tragedies	/B	
+transfer	Translocation	
+trapped	BeingAtAPlace	
+trauma	BeingInjured	
+treated	TherapeuticEvent	
+treating	TherapeuticEvent	
+treatment	TherapeuticEvent	
+tremblor	Earthquake	
+tremblors	Earthquake	
+tremor	Earthquake	
+tremors	Earthquake	
+trial	Trial	
+tsunami	Tsunami	
+tsunamis	Tsunami	
+unexploded	/N	
+unharmed	/N	
+Unrest	Riot	
+unrest	Riot	
+vandalism	Riot	
+vandalized	Riot	
+verdict	Trial	
+verdicts	Trial	
+victories	/M	
+vigil	/O	
+vigils	/O	
+violence	/B	
+violent	/B	
+walked	Ambulating	
+walking	Ambulating	
+wander	Ambulating	
+wandering	Ambulating	
+War	War	
+war	War	
+warfare	War	
+Watergate	/I	
+weed out	Removing	
+went up in flames	Fire	
+wound	BeingInjured	
+wounded	BeingInjured	
+wounding	BeingInjured	
+wounds	BeingInjured	
+wracked	Damaging	
+WWII	War	

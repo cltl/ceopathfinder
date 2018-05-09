@@ -1,0 +1,11 @@
+/Users/piek/Desktop/Roxane/pathfinder/data/gold
+/Users/piek/Desktop/Roxane/pathfinder/data/out-ceo-intermediate2
+.eval.ceo3S
+Precision pairs-value strict: 0.7931957186544343
+Recall pairs-value strict: 0.39051472663969133
+F1 pairs-value strict: 0.5233621287596948
+
+Precision pairs-only: 0.8398318042813455
+Recall pairs-only: 0.4041946463066875
+F1 pairs-only: 0.5457368192262312
+

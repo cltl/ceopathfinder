@@ -1,0 +1,11 @@
+/Users/piek/Desktop/Roxane/pathfinder/data/gold
+/Users/piek/Desktop/Roxane/pathfinder/data/out-narrativechains
+.eval.nc5S
+Precision pairs-value strict: 0.6105032822757112
+Recall pairs-value strict: 0.026160337552742614
+F1 pairs-value strict: 0.05017083258406761
+
+Precision pairs-only: 0.6345733041575492
+Recall pairs-only: 0.02716373173473211
+F1 pairs-only: 0.05209736818467618
+
