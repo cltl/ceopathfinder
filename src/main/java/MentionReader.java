@@ -132,7 +132,7 @@ public class MentionReader {
          for (int i = 0; i < files.size(); i++) {
             File file = files.get(i);
             //if (!file.getName().equals("19_1ecb.xml_all_event_mentions.eval"))  continue;
-            System.out.println("file.getName() = " + file.getName());
+            //System.out.println("file.getName() = " + file.getName());
 
             ArrayList<Gold> gold = new ArrayList<Gold>();
             ArrayList<Mention> mentions = new ArrayList<Mention>();
