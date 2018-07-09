@@ -1,11 +1,11 @@
 /Code/vu/ceopathfinder/pathfinder/data/gold
 /Code/vu/ceopathfinder/pathfinder/data/out-baseline
 .eval.blANY
-Precision pairs-value strict: 0.2478365328543771
-Recall pairs-value strict: 1.0
-F1 pairs-value strict: 0.39722596081950057
+Precision pairs-value strict: 0.14407814407814407
+Recall pairs-value strict: 0.5109186746987951
+F1 pairs-value strict: 0.22477121205847028
 
-Precision pairs-only: 0.36861748034802083
-Recall pairs-only: 1.0
-F1 pairs-only: 0.5386713024508301
+Precision pairs-only: 0.28152041195519456
+Recall pairs-only: 0.9989639257794104
+F1 pairs-only: 0.43925369116398505
 

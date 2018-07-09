@@ -120,12 +120,19 @@ public class ResultTable {
 
             result += "\n";
 
+            System.out.println("resultList.size() = " + resultList.size());
+            System.out.println("pstrictList.size() = " + pstrictList.size());
+            System.out.println("rstrictList.size() = " + rstrictList.size());
+            System.out.println("fstrictList.size() = " + fstrictList.size());
+            System.out.println("plooseList.size() = " + plooseList.size());
+            System.out.println("rlooseList.size() = " + rlooseList.size());
+            System.out.println("flooseList.size() = " + flooseList.size());
             for (int i = 0; i < resultList.size(); i++) {
                 result +=  resultList.get(i)+"\t";
                 result +=  pstrictList.get(i)+"\t";
                 result +=  rstrictList.get(i)+"\t";
                 result +=  fstrictList.get(i)+"\t";
-                result +=  plooseList.get(i)+"\t";
+                result +=  plooseList.get(i)+"\t";  ///
                 result +=  rlooseList.get(i)+"\t";
                 result +=  flooseList.get(i)+"\n";
             }

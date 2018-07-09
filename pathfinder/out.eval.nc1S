@@ -1,11 +1,11 @@
 /Code/vu/ceopathfinder/pathfinder/data/gold
 /Code/vu/ceopathfinder/pathfinder/data/out-narrativechains
 .eval.nc1S
-Precision pairs-value strict: 0.76
-Recall pairs-value strict: 0.016065388951521983
-F1 pairs-value strict: 0.03146563621308308
+Precision pairs-value strict: 0.2894736842105263
+Recall pairs-value strict: 0.002066892145809846
+F1 pairs-value strict: 0.004104477611940298
 
-Precision pairs-only: 0.8044444444444444
-Recall pairs-only: 0.01698892434766285
-F1 pairs-only: 0.0332751171982719
+Precision pairs-only: 0.42105263157894735
+Recall pairs-only: 0.0030044127311989483
+F1 pairs-only: 0.0059662533793232025
 

@@ -1,0 +1,11 @@
+/Code/vu/ceopathfinder/pathfinder/data/gold
+/Code/vu/ceopathfinder/pathfinder/data/out-naf-clinks
+.eval.nafcl5S
+Precision pairs-value strict: 0.38461538461538464
+Recall pairs-value strict: 0.002822466836014677
+F1 pairs-value strict: 0.005603810591202018
+
+Precision pairs-only: 0.7435897435897436
+Recall pairs-only: 0.005456769216295042
+F1 pairs-only: 0.010834033809657235
+

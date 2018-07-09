@@ -2,24 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="efc146f7-8d54-4c5d-bebb-53054486a32b" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/BaseLineMatching.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/CeoMatching.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/Clink.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/FrameNetLuReader.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/FrameNetMatching.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/FrameNetReader.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/NafClinkMatching.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/main/java/NafClinks.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/src/main/java/NarrativeChains.java" afterPath="$PROJECT_DIR$/src/main/java/NarrativeChainMatching.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pathfinder/expandresults.xlsx" afterPath="$PROJECT_DIR$/pathfinder/expandresults.xlsx" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pathfinder/bin/ceopathfinder-v0.1-jar-with-dependencies.jar" afterPath="$PROJECT_DIR$/pathfinder/bin/ceopathfinder-v0.1-jar-with-dependencies.jar" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pathfinder/expandresults.xls" afterPath="$PROJECT_DIR$/pathfinder/expandresults.xls" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CeoPathFinder.iws" afterPath="$PROJECT_DIR$/CeoPathFinder.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pathfinder/eval_script-20180323.py" afterPath="$PROJECT_DIR$/pathfinder/eval_script-20180323.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pathfinder/out.eval.bl1S" afterPath="$PROJECT_DIR$/pathfinder/out.eval.bl1S" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pathfinder/out.eval.bl3S" afterPath="$PROJECT_DIR$/pathfinder/out.eval.bl3S" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pathfinder/out.eval.bl5S" afterPath="$PROJECT_DIR$/pathfinder/out.eval.bl5S" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pathfinder/out.eval.blANY" afterPath="$PROJECT_DIR$/pathfinder/out.eval.blANY" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pathfinder/out.eval.ceo1S" afterPath="$PROJECT_DIR$/pathfinder/out.eval.ceo1S" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pathfinder/out.eval.ceo3S" afterPath="$PROJECT_DIR$/pathfinder/out.eval.ceo3S" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pathfinder/out.eval.ceo5S" afterPath="$PROJECT_DIR$/pathfinder/out.eval.ceo5S" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pathfinder/out.eval.ceoANY" afterPath="$PROJECT_DIR$/pathfinder/out.eval.ceoANY" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pathfinder/run.sh" afterPath="$PROJECT_DIR$/pathfinder/run.sh" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/CeoPathFinder.java" afterPath="$PROJECT_DIR$/src/main/java/CeoPathFinder.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/MentionReader.java" afterPath="$PROJECT_DIR$/src/main/java/MentionReader.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/NafClinkMatching.java" afterPath="$PROJECT_DIR$/src/main/java/NafClinkMatching.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/ResultTable.java" afterPath="$PROJECT_DIR$/src/main/java/ResultTable.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -35,10 +31,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="MentionReader.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="MentionReader.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/MentionReader.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="352">
+            <state relative-caret-position="-4407">
               <caret line="69" column="0" lean-forward="false" selection-start-line="69" selection-start-column="0" selection-end-line="69" selection-end-column="0" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -82,7 +78,7 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="FrameNetMatching.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="FrameNetMatching.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/FrameNetMatching.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="274">
@@ -101,15 +97,15 @@
       <file leaf-file-name="NafClinkMatching.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/NafClinkMatching.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-66">
-              <caret line="140" column="92" lean-forward="false" selection-start-line="140" selection-start-column="92" selection-end-line="140" selection-end-column="92" />
+            <state relative-caret-position="374">
+              <caret line="22" column="29" lean-forward="false" selection-start-line="22" selection-start-column="29" selection-end-line="22" selection-end-column="29" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#153#179#0" expanded="true" />
                 <element signature="e#376#403#0" expanded="true" />
-                <element signature="e#2552#2579#0" expanded="true" />
-                <element signature="e#4355#4382#0" expanded="true" />
-                <element signature="e#6356#6383#0" expanded="true" />
+                <element signature="e#2560#2587#0" expanded="true" />
+                <element signature="e#4363#4390#0" expanded="true" />
+                <element signature="e#6364#6391#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -131,8 +127,8 @@
       <file leaf-file-name="ResultTable.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/java/ResultTable.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="90">
-              <caret line="58" column="41" lean-forward="false" selection-start-line="58" selection-start-column="41" selection-end-line="58" selection-end-column="41" />
+            <state relative-caret-position="430">
+              <caret line="39" column="31" lean-forward="false" selection-start-line="39" selection-start-column="31" selection-end-line="39" selection-end-column="31" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#1436#1444#0" expanded="true" />
@@ -218,12 +214,12 @@
         <option value="$PROJECT_DIR$/src/main/java/FrameNetReader.java" />
         <option value="$PROJECT_DIR$/src/main/java/CeoMatching.java" />
         <option value="$PROJECT_DIR$/src/main/java/NarrativeChainMatching.java" />
-        <option value="$PROJECT_DIR$/src/main/java/NafClinkMatching.java" />
         <option value="$PROJECT_DIR$/pathfinder/eval_script-20180323.py" />
         <option value="$PROJECT_DIR$/pathfinder/run.sh" />
-        <option value="$PROJECT_DIR$/src/main/java/ResultTable.java" />
         <option value="$PROJECT_DIR$/src/main/java/MentionReader.java" />
         <option value="$PROJECT_DIR$/src/main/java/FrameNetMatching.java" />
+        <option value="$PROJECT_DIR$/src/main/java/ResultTable.java" />
+        <option value="$PROJECT_DIR$/src/main/java/NafClinkMatching.java" />
       </list>
     </option>
   </component>
@@ -272,8 +268,8 @@
     </treeState>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="14" />
-    <option name="y" value="26" />
+    <option name="x" value="446" />
+    <option name="y" value="58" />
     <option name="width" value="1878" />
     <option name="height" value="1050" />
   </component>
@@ -302,7 +298,7 @@
             <path>
               <item name="Root" type="cbb8eebc:String" user="Root" />
               <item name="ceopathfinder" type="cbb8eebc:String" user="ceopathfinder" />
-              <item name="src/main/java" type="cbb8eebc:String" user="src/main/java" />
+              <item name="pathfinder" type="cbb8eebc:String" user="pathfinder" />
             </path>
           </expand>
           <select />
@@ -386,7 +382,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Application.MentionReader">
+  <component name="RunManager" selected="Application.ResultTable">
     <configuration name="FrameNetReader" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
       <option name="MAIN_CLASS_NAME" value="FrameNetReader" />
@@ -735,8 +731,8 @@
     </list>
     <recent_temporary>
       <list size="5">
-        <item index="0" class="java.lang.String" itemvalue="Application.MentionReader" />
-        <item index="1" class="java.lang.String" itemvalue="Application.ResultTable" />
+        <item index="0" class="java.lang.String" itemvalue="Application.ResultTable" />
+        <item index="1" class="java.lang.String" itemvalue="Application.MentionReader" />
         <item index="2" class="java.lang.String" itemvalue="Application.FrameNetReader" />
         <item index="3" class="java.lang.String" itemvalue="Maven.ceopathfinder [clean,validate,compile...]" />
         <item index="4" class="java.lang.String" itemvalue="Application.NarrativeChainMatching" />
@@ -777,7 +773,7 @@
       <workItem from="1525831998414" duration="271000" />
       <workItem from="1525935788984" duration="284000" />
       <workItem from="1530859984253" duration="325000" />
-      <workItem from="1530874839729" duration="22156000" />
+      <workItem from="1530874839729" duration="23888000" />
     </task>
     <task id="LOCAL-00001" summary="-- first commit">
       <created>1499887173687</created>
@@ -982,14 +978,28 @@
       <option name="project" value="LOCAL" />
       <updated>1525832019736</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="-- all 5 methods implemented">
+      <created>1531144588915</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1531144588915</updated>
+    </task>
+    <task id="LOCAL-00031" summary="-- all 5 methods implemented">
+      <created>1531145253414</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1531145253414</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="127337000" />
+    <option name="totallyTimeSpent" value="129069000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="14" y="26" width="1878" height="1050" extended-state="0" />
+    <frame x="446" y="58" width="1878" height="1050" extended-state="0" />
     <layout>
       <window_info id="JSON Formatter" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -999,9 +1009,9 @@
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23595506" sideWeight="0.3901454" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.23529412" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.09694989" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.273374" sideWeight="0.6098546" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32215446" sideWeight="0.6098546" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -1075,7 +1085,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="-- first commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="-- first commit" />
+    <MESSAGE value="-- all 5 methods implemented" />
+    <option name="LAST_COMMIT_MESSAGE" value="-- all 5 methods implemented" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1472,21 +1483,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/NafClinkMatching.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-66">
-          <caret line="140" column="92" lean-forward="false" selection-start-line="140" selection-start-column="92" selection-end-line="140" selection-end-column="92" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#153#179#0" expanded="true" />
-            <element signature="e#376#403#0" expanded="true" />
-            <element signature="e#2552#2579#0" expanded="true" />
-            <element signature="e#4355#4382#0" expanded="true" />
-            <element signature="e#6356#6383#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pathfinder/eval_script-20180323.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="226">
@@ -1503,10 +1499,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/FrameNetMatching.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="274">
+          <caret line="29" column="13" lean-forward="false" selection-start-line="29" selection-start-column="13" selection-end-line="29" selection-end-column="13" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#2083#2110#0" expanded="true" />
+            <element signature="e#3315#3342#0" expanded="true" />
+            <element signature="e#4741#4768#0" expanded="true" />
+            <element signature="e#6345#6372#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/ResultTable.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="90">
-          <caret line="58" column="41" lean-forward="false" selection-start-line="58" selection-start-column="41" selection-end-line="58" selection-end-column="41" />
+        <state relative-caret-position="430">
+          <caret line="39" column="31" lean-forward="false" selection-start-line="39" selection-start-column="31" selection-end-line="39" selection-end-column="31" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#1436#1444#0" expanded="true" />
@@ -1520,9 +1530,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/NafClinkMatching.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="22" column="29" lean-forward="false" selection-start-line="22" selection-start-column="29" selection-end-line="22" selection-end-column="29" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#153#179#0" expanded="true" />
+            <element signature="e#376#403#0" expanded="true" />
+            <element signature="e#2560#2587#0" expanded="true" />
+            <element signature="e#4363#4390#0" expanded="true" />
+            <element signature="e#6364#6391#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/MentionReader.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="352">
+        <state relative-caret-position="-4407">
           <caret line="69" column="0" lean-forward="false" selection-start-line="69" selection-start-column="0" selection-end-line="69" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -1534,20 +1559,6 @@
             <element signature="e#23484#23492#0" expanded="true" />
             <element signature="e#23713#23719#0" expanded="true" />
             <element signature="e#24854#24863#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/FrameNetMatching.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="274">
-          <caret line="29" column="13" lean-forward="false" selection-start-line="29" selection-start-column="13" selection-end-line="29" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#2083#2110#0" expanded="true" />
-            <element signature="e#3315#3342#0" expanded="true" />
-            <element signature="e#4741#4768#0" expanded="true" />
-            <element signature="e#6345#6372#0" expanded="true" />
           </folding>
         </state>
       </provider>

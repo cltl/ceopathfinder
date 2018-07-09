@@ -1,0 +1,11 @@
+/Code/vu/ceopathfinder/pathfinder/data/gold
+/Code/vu/ceopathfinder/pathfinder/data/out-framenet
+.eval.fn3S
+Precision pairs-value strict: 0.16981132075471697
+Recall pairs-value strict: 0.001693480101608806
+F1 pairs-value strict: 0.0033535165346995806
+
+Precision pairs-only: 0.3113207547169811
+Recall pairs-only: 0.0031047135196161446
+F1 pairs-only: 0.006148113646949231
+

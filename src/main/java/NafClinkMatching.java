@@ -19,16 +19,16 @@ public class NafClinkMatching {
                        Mention mention2 = mentions.get(j);
                        if (!mention1.getTokenString().equals(mention2.getTokenString()) &&
                                !mention1.getWord().equalsIgnoreCase(mention2.getWord())) {
-                           System.out.println("mention1 = " + mention1.toString());
-                           System.out.println("mention2 = " + mention2.toString());
+                           //System.out.println("mention1 = " + mention1.toString());
+                           //System.out.println("mention2 = " + mention2.toString());
                            for (int k = 0; k < fileClinks.size(); k++) {
                                Clink clink = fileClinks.get(k);
                                if ((clink.causeFrom.getWf().equals(mention1.getWord()) || clink.causeFrom.getWf().equals(mention2.getWord())) &&
                                    (clink.causeTo.getWf().equals(mention1.getWord()) || clink.causeTo.getWf().equals(mention2.getWord()))
                                ){
 
-                                   System.out.println("clink.causeFrom.toSimpleString() = " + clink.causeFrom.toSimpleString());
-                                   System.out.println("clink.causeTo.toSimpleString() = " + clink.causeTo.toSimpleString());
+                                   //System.out.println("clink.causeFrom.toSimpleString() = " + clink.causeFrom.toSimpleString());
+                                   //System.out.println("clink.causeTo.toSimpleString() = " + clink.causeTo.toSimpleString());
                                    addNafClinkResult(keyResults, mention1, mention2);
                                    break;
                                 }

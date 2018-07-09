@@ -1,0 +1,11 @@
+/Code/vu/ceopathfinder/pathfinder/data/gold
+/Code/vu/ceopathfinder/pathfinder/data/out-ceo-intermediate2
+.eval.ceo3S
+Precision pairs-value strict: 0.3446601941747573
+Recall pairs-value strict: 0.05343870542854455
+F1 pairs-value strict: 0.09253074855420705
+
+Precision pairs-only: 0.4848300970873786
+Recall pairs-only: 0.07517877305231464
+F1 pairs-only: 0.13017269468882373
+

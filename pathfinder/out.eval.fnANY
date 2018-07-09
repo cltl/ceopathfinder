@@ -1,0 +1,11 @@
+/Code/vu/ceopathfinder/pathfinder/data/gold
+/Code/vu/ceopathfinder/pathfinder/data/out-framenet
+.eval.fnANY
+Precision pairs-value strict: 0.08321377331420372
+Recall pairs-value strict: 0.005456769216295042
+F1 pairs-value strict: 0.010241921243157337
+
+Precision pairs-only: 0.1836441893830703
+Recall pairs-only: 0.012042525166995954
+F1 pairs-only: 0.02260286067455412
+
