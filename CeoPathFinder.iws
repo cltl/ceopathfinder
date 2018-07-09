@@ -1,22 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="efc146f7-8d54-4c5d-bebb-53054486a32b" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pathfinder/bin/ceopathfinder-v0.1-jar-with-dependencies.jar" afterPath="$PROJECT_DIR$/pathfinder/bin/ceopathfinder-v0.1-jar-with-dependencies.jar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pathfinder/expandresults.xls" afterPath="$PROJECT_DIR$/pathfinder/expandresults.xls" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CeoPathFinder.iws" afterPath="$PROJECT_DIR$/CeoPathFinder.iws" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pathfinder/out.eval.bl1S" afterPath="$PROJECT_DIR$/pathfinder/out.eval.bl1S" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pathfinder/out.eval.bl3S" afterPath="$PROJECT_DIR$/pathfinder/out.eval.bl3S" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pathfinder/out.eval.bl5S" afterPath="$PROJECT_DIR$/pathfinder/out.eval.bl5S" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pathfinder/out.eval.blANY" afterPath="$PROJECT_DIR$/pathfinder/out.eval.blANY" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pathfinder/out.eval.ceo1S" afterPath="$PROJECT_DIR$/pathfinder/out.eval.ceo1S" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pathfinder/out.eval.ceo3S" afterPath="$PROJECT_DIR$/pathfinder/out.eval.ceo3S" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pathfinder/out.eval.ceo5S" afterPath="$PROJECT_DIR$/pathfinder/out.eval.ceo5S" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pathfinder/out.eval.ceoANY" afterPath="$PROJECT_DIR$/pathfinder/out.eval.ceoANY" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pathfinder/run.sh" afterPath="$PROJECT_DIR$/pathfinder/run.sh" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/NafClinkMatching.java" afterPath="$PROJECT_DIR$/src/main/java/NafClinkMatching.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/ResultTable.java" afterPath="$PROJECT_DIR$/src/main/java/ResultTable.java" />
-    </list>
+    <list default="true" id="efc146f7-8d54-4c5d-bebb-53054486a32b" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/out/" />
     <ignored path="$PROJECT_DIR$/target/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -267,9 +252,9 @@
       <select />
     </treeState>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="446" />
-    <option name="y" value="58" />
+  <component name="ProjectFrameBounds" extendedState="1">
+    <option name="x" value="86" />
+    <option name="y" value="190" />
     <option name="width" value="1878" />
     <option name="height" value="1050" />
   </component>
@@ -773,7 +758,7 @@
       <workItem from="1525831998414" duration="271000" />
       <workItem from="1525935788984" duration="284000" />
       <workItem from="1530859984253" duration="325000" />
-      <workItem from="1530874839729" duration="23888000" />
+      <workItem from="1530874839729" duration="24095000" />
     </task>
     <task id="LOCAL-00001" summary="-- first commit">
       <created>1499887173687</created>
@@ -996,10 +981,10 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="129069000" />
+    <option name="totallyTimeSpent" value="129276000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="446" y="58" width="1878" height="1050" extended-state="0" />
+    <frame x="86" y="190" width="1878" height="1050" extended-state="1" />
     <layout>
       <window_info id="JSON Formatter" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="12" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
@@ -1011,11 +996,11 @@
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.23595506" sideWeight="0.3901454" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.09694989" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32215446" sideWeight="0.6098546" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.32215446" sideWeight="0.6098546" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19989106" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19989106" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.15789473" sideWeight="0.49759614" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven-2 Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295207" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
