@@ -25,8 +25,8 @@ CHAINS=$BASE/resources/EventChains_JurChamb_CEO.rtf
 CLINKS=$BASE/data/nwr-clinks
 
 # You need to obtain your own copy of FrameNet
-FN-REL=/Resources/FrameNet/fndata-1.7/frRelation.xml
-FN-LEX=/Resources/FrameNet/fndata-1.7/luIndex.xml
+FNREL=/Resources/FrameNet/fndata-1.7/frRelation.xml
+FNLEX=/Resources/FrameNet/fndata-1.7/luIndex.xml
 
 # comment out EXPAND to remove coreferential matches
 EXPAND="expand"
@@ -34,58 +34,58 @@ EXPAND="expand"
 
 # BASELINE
 OUT=$BASE/data/out-baseline
-java -Xmx812m -cp $BIN MentionReader --method 0 --input $IN --output $OUT --$EXPAND
+#java -Xmx812m -cp $BIN MentionReader --method 0 --input $IN --output $OUT --$EXPAND
 
-python eval_script-20180323.py $IN $OUT .eval.bl1S > out.eval.bl1S
-python eval_script-20180323.py $IN $OUT .eval.bl3S > out.eval.bl3S
-python eval_script-20180323.py $IN $OUT .eval.bl5S > out.eval.bl5S
-python eval_script-20180323.py $IN $OUT .eval.blANY > out.eval.blANY
+#python eval_script-20180323.py $IN $OUT .eval.bl1S > out.eval.bl1S
+#python eval_script-20180323.py $IN $OUT .eval.bl3S > out.eval.bl3S
+#python eval_script-20180323.py $IN $OUT .eval.bl5S > out.eval.bl5S
+#python eval_script-20180323.py $IN $OUT .eval.blANY > out.eval.blANY
 
 #CEO
 #direct
 OUT=$BASE/data/out-ceo-direct
 
-java -Xmx812m -cp $BIN MentionReader --method 1 --property-threshold 1 --ontology-depth 1 --ceo-lexicon $CEOLEX --ceo-ontology $CEO --debug --input $IN --output $OUT --$EXPAND
+#java -Xmx812m -cp $BIN MentionReader --method 1 --property-threshold 1 --ontology-depth 1 --ceo-lexicon $CEOLEX --ceo-ontology $CEO --debug --input $IN --output $OUT --$EXPAND
 
-python eval_script-20180323.py $IN $OUT .eval.ceo1S > out.eval.ceo1S
-python eval_script-20180323.py $IN $OUT .eval.ceo3S > out.eval.ceo3S
-python eval_script-20180323.py $IN $OUT .eval.ceo5S > out.eval.ceo5S
-python eval_script-20180323.py $IN $OUT .eval.ceoANY > out.eval.ceoANY
+#python eval_script-20180323.py $IN $OUT .eval.ceo1S > out.eval.ceo1S
+#python eval_script-20180323.py $IN $OUT .eval.ceo3S > out.eval.ceo3S
+#python eval_script-20180323.py $IN $OUT .eval.ceo5S > out.eval.ceo5S
+#python eval_script-20180323.py $IN $OUT .eval.ceoANY > out.eval.ceoANY
 
 #intermediate 1
 OUT=$BASE/data/out-ceo-intermediate1
 
-java -Xmx812m -cp $BIN MentionReader --method 1 --property-threshold 1 --ontology-depth 1 --ceo-lexicon $CEOLEX --ceo-ontology $CEO --debug --input $IN --output $OUT --intermediate 1 --$EXPAND
+#java -Xmx812m -cp $BIN MentionReader --method 1 --property-threshold 1 --ontology-depth 1 --ceo-lexicon $CEOLEX --ceo-ontology $CEO --debug --input $IN --output $OUT --intermediate 1 --$EXPAND
 
-python eval_script-20180323.py $IN $OUT .eval.ceo1S > out.eval.ceo1Si1
-python eval_script-20180323.py $IN $OUT .eval.ceo3S > out.eval.ceo3Si1
-python eval_script-20180323.py $IN $OUT .eval.ceo5S > out.eval.ceo5Si1
-python eval_script-20180323.py $IN $OUT .eval.ceoANY > out.eval.ceoANYi1
+#python eval_script-20180323.py $IN $OUT .eval.ceo1S > out.eval.ceo1Si1
+#python eval_script-20180323.py $IN $OUT .eval.ceo3S > out.eval.ceo3Si1
+#python eval_script-20180323.py $IN $OUT .eval.ceo5S > out.eval.ceo5Si1
+#python eval_script-20180323.py $IN $OUT .eval.ceoANY > out.eval.ceoANYi1
 
 #intermediate 2
 OUT=$BASE/data/out-ceo-intermediate2
 
 java -Xmx812m -cp $BIN MentionReader --method 1 --property-threshold 1 --ontology-depth 1 --ceo-lexicon $CEOLEX --ceo-ontology $CEO --debug --input $IN --output $OUT --intermediate 2 --$EXPAND
 
-python eval_script-20180323.py $IN $OUT .eval.ceo1S > out.eval.ceo1Si2
-python eval_script-20180323.py $IN $OUT .eval.ceo3S > out.eval.ceo3Si2
-python eval_script-20180323.py $IN $OUT .eval.ceo5S > out.eval.ceo5Si2
-python eval_script-20180323.py $IN $OUT .eval.ceoANY > out.eval.ceoANYi2
+#python eval_script-20180323.py $IN $OUT .eval.ceo1S > out.eval.ceo1Si2
+#python eval_script-20180323.py $IN $OUT .eval.ceo3S > out.eval.ceo3Si2
+#python eval_script-20180323.py $IN $OUT .eval.ceo5S > out.eval.ceo5Si2
+#python eval_script-20180323.py $IN $OUT .eval.ceoANY > out.eval.ceoANYi2
 
 # Narrative chains
 OUT=$BASE/data/out-narrativechains
 
-java -Xmx812m -cp $BIN MentionReader --method 2 --chains $CHAINS --input $IN --output $OUT --$EXPAND
+#java -Xmx812m -cp $BIN MentionReader --method 2 --chains $CHAINS --input $IN --output $OUT --$EXPAND
 
-python eval_script-20180323.py $IN $OUT .eval.nc1S > out.eval.nc1S
-python eval_script-20180323.py $IN $OUT .eval.nc3S > out.eval.nc3S
-python eval_script-20180323.py $IN $OUT .eval.nc5S > out.eval.nc5S
-python eval_script-20180323.py $IN $OUT .eval.ncANY > out.eval.ncANY
+#python eval_script-20180323.py $IN $OUT .eval.nc1S > out.eval.nc1S
+#python eval_script-20180323.py $IN $OUT .eval.nc3S > out.eval.nc3S
+#python eval_script-20180323.py $IN $OUT .eval.nc5S > out.eval.nc5S
+#python eval_script-20180323.py $IN $OUT .eval.ncANY > out.eval.ncANY
 
 # NAF clinks
 OUT=$BASE/data/out-naf-clinks
 
-java -Xmx812m -cp $BIN MentionReader --method 3 --nwr-clinks $CLINKS --input $IN --output $OUT --$EXPAND
+java -Xmx812m -cp $BIN MentionReader --method 3 --clinks $CLINKS --input $IN --output $OUT --$EXPAND
 
 python eval_script-20180323.py $IN $OUT .eval.clink1S > out.eval.clink1S
 python eval_script-20180323.py $IN $OUT .eval.clink3S > out.eval.clink3S
@@ -95,7 +95,7 @@ python eval_script-20180323.py $IN $OUT .eval.clinkANY > out.eval.clinkANY
 # NAF clinks
 OUT=$BASE/data/out-framenet
 
-java -Xmx812m -cp $BIN MentionReader --method 4 --fn-relations $CLINKS $FN-REL --fn-lexicon $FN-LEX --input $IN --output $OUT --$EXPAND
+java -Xmx812m -cp $BIN MentionReader --method 4 --fn-relations $FNREL --fn-lexicon $FNLEX --input $IN --output $OUT --$EXPAND
 
 python eval_script-20180323.py $IN $OUT .eval.fn1S > out.eval.fn1S
 python eval_script-20180323.py $IN $OUT .eval.fn3S > out.eval.fn3S
