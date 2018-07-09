@@ -21,14 +21,14 @@ public class CeoPathFinder {
     private HashMap<String, ArrayList<String>> classPreMap;
     private HashMap<String, ArrayList<String>> classDurMap;
     private HashMap<String, ArrayList<String>> classPosMap;
-    static private String matchedHow = "";
-    static boolean during = false;
-    static boolean deep = false;
-    static public int rule = 0; // 0 = assertion, 1 = property, 2 = subject-property, 3 = subject - property - object
+    private String matchedHow = "";
+    private boolean during = false;
+    private boolean deep = false;
+    private int rule = 0; // 0 = assertion, 1 = property, 2 = subject-property, 3 = subject - property - object
+    private int intermediate = 0;
+    private Integer threshold = 1;
+
     public HashMap<String, ArrayList<String>> ceoLexicon;
-
-
-
 
     private OntModel ontologyModel;
 
@@ -64,8 +64,53 @@ public class CeoPathFinder {
          classPosMap = new HashMap<String, ArrayList<String>>();
          classDurMap = new HashMap<String, ArrayList<String>>();
          ceoLexicon = new HashMap<String, ArrayList<String>>();
-         rule = 0;
          matchedHow = "";
+         during = false;
+         deep = false;
+         rule = 0; // 0 = assertion, 1 = property, 2 = subject-property, 3 = subject - property - object
+         intermediate = 0;
+         threshold = 1;
+    }
+
+
+    public  boolean isDeep() {
+        return deep;
+    }
+
+    public void setDeep(boolean deep) {
+        this.deep = deep;
+    }
+
+    public int getIntermediate() {
+        return intermediate;
+    }
+
+    public void setIntermediate(int intermediate) {
+        this.intermediate = intermediate;
+    }
+
+    public Integer getThreshold() {
+        return threshold;
+    }
+
+    public void setThreshold(Integer threshold) {
+        this.threshold = threshold;
+    }
+
+    public int getRule() {
+        return rule;
+    }
+
+    public void setRule(int rule) {
+        this.rule = rule;
+    }
+
+    public boolean isDuring() {
+        return during;
+    }
+
+    public void setDuring(boolean during) {
+        this.during = during;
     }
 
     public void readLexiconFile (File file) {
@@ -102,21 +147,6 @@ public class CeoPathFinder {
             System.out.println("lexicon.size() = " + ceoLexicon.size());
     }
 
-    public static int getRule() {
-        return rule;
-    }
-
-    public static void setRule(int rule) {
-        CeoPathFinder.rule = rule;
-    }
-
-    public static boolean isDuring() {
-        return during;
-    }
-
-    public static void setDuring(boolean during) {
-        CeoPathFinder.during = during;
-    }
 
     public void readOwlFile (String pathToOwlFile) {
         InputStream in = FileManager.get().open(pathToOwlFile);
@@ -1143,7 +1173,7 @@ public class CeoPathFinder {
         }
     }
 
-    public ArrayList<String> pathValuesForTypes (ArrayList<String> mention1Types, ArrayList<String> mention2Types, int intermediate) {
+    public ArrayList<String> pathValuesForTypes (ArrayList<String> mention1Types, ArrayList<String> mention2Types) {
         ArrayList<String> matchings = new ArrayList<String>();
         for (int i = 0; i < mention1Types.size(); i++) {
             String m1Type = mention1Types.get(i);
@@ -1185,6 +1215,7 @@ public class CeoPathFinder {
         boolean printConditionMaps = false;
         boolean printHierarchy = false;
         boolean printChain = false;
+        CeoPathFinder ceoPathFinder = new CeoPathFinder();
 
         if (args.length==0) {
             args = testparameter.split(" ");
@@ -1213,19 +1244,18 @@ public class CeoPathFinder {
                 printChain = true;
             }
             else if (arg.equals("--deep")) {
-                deep = true;
+                ceoPathFinder.deep = true;
             }
             else if (arg.equals("--during")) {
-                during = true;
+                ceoPathFinder.during = true;
             }
         }
         if (!new File(pathToOwlOntology).exists()) {
             System.out.println("cannot find pathToOwlOntology = " + pathToOwlOntology);
             return;
         }
-        CeoPathFinder ceoPathFinder = new CeoPathFinder();
         ceoPathFinder.readOwlFile(pathToOwlOntology);
-        if (deep) {
+        if (ceoPathFinder.deep) {
             ceoPathFinder.interpretOntologyWithInheritance("Physical");
         }
         else {
@@ -1264,13 +1294,13 @@ public class CeoPathFinder {
         }
     }
 
-    public boolean areCircumstantial (String lemma1, String lemma2, int intermediate, Integer threshold) {
+    public boolean areCircumstantial (String lemma1, String lemma2) {
         if (ceoLexicon.containsKey(lemma1.toLowerCase())) {
             ArrayList<String> mention1Classes = ceoLexicon.get(lemma1.toLowerCase());
             if (ceoLexicon.containsKey(lemma2.toLowerCase())) {
                 ArrayList<String> mention2Classes = ceoLexicon.get(lemma2.toLowerCase());
-                ArrayList<String> matches1 = pathValuesForTypes(mention1Classes, mention2Classes, intermediate);
-                ArrayList<String> matches2 = pathValuesForTypes(mention2Classes, mention1Classes, intermediate);
+                ArrayList<String> matches1 = pathValuesForTypes(mention1Classes, mention2Classes);
+                ArrayList<String> matches2 = pathValuesForTypes(mention2Classes, mention1Classes);
                 if (matches1.size() >= threshold || matches2.size() >= threshold) {
                     return true;
                 }

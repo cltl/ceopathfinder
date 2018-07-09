@@ -1,5 +1,7 @@
 import java.io.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @TODO
@@ -10,36 +12,44 @@ import java.util.*;
 
 
 public class MentionReader {
-    static CeoPathFinder ceoPathFinder = new CeoPathFinder();
-    static Integer threshold = 1;
-    static int deep = 0;
     static boolean EXPAND = false;
     static boolean DEBUG = false;
-    static int METHOD = -1;   // 0 = BASELINE, 1 = CEO, 2 = NarrativeChains, 3 = FBK PRO, 4 = Framenet cause
-    static public int rule = 0; // 0 = full assertion, 1 = property, 2 = subject-property, 3 = subject - property - object
-    static int intermediate = 0;
+    static int METHOD = -1;   // 0 = BASELINE, 1 = CEO, 2 = NarrativeChainMatching, 3 = FBK PRO, 4 = Framenet cause
     static HashMap<String, ArrayList<String>> mentionInstanceMap = null;
     static HashMap<String, ArrayList<String>> instancMentionMap = null;
-    static HashMap<String,NarrativeChain> chains = null;
-    static HashMap<String,ArrayList<String>> verbs = null;
 
-    static HashMap<String, Integer> OOV = new HashMap<String, Integer>();
-    ///Users/piek/Desktop/Roxane/Tommaso-v3/not-connected-events/3_1ecb.xml_not-connected-events.eval
 
-    static String testCeoParameters = "--ceo-lexicon /Users/piek/Desktop/Roxane/CEO-lexicon/ceo-lexicon-ecb-v1.txt " +
-            "--ceo-ontology /Users/piek/Desktop/Roxane/CEO.v1.0/CEO_version_1.owl " +
+    static String testCeoParameters = "--ceo-lexicon /Code/vu/ceopathfinder/pathfinder/resources/ceo-lexicon-ecb-v1.txt " +
+            "--ceo-ontology /Code/vu/ceopathfinder/pathfinder/data/resources/CEO_version_1.owl " +
             "--ontology-depth 1 " +
             "--property-threshold 1 " +
-            "--input /Users/piek/Desktop/Roxane/Tommaso-v5/gold " +
-            "--output /Users/piek/Desktop/Roxane/Tommaso-v5/out " +
+            "--input /Code/vu/ceopathfinder/data/gold " +
+            "--output /Code/vu/ceopathfinder/data/out " +
             "--intermediate 1 " +
             "--gold " +
+            "--method 1 " +
             "--debug";
 
-    static String testNCParameters = "--chains /Code/vu/ceopathfinder/resources/narrativechains/EventChains_JurChamb_CEO.rtf " +
-            "--input /Users/piek/Desktop/Roxane/Tommaso-v5/gold " +
-            "--output /Users/piek/Desktop/Roxane/Tommaso-v5/out " +
+    static String testNarrativeChainParameters = "--chains /Code/vu/ceopathfinder/pathfinder/resources/narrativechains/EventChains_JurChamb_CEO.rtf " +
+            "--input /Code/vu/ceopathfinder/pathfinder/data/gold " +
+            "--output /Code/vu/ceopathfinder/pathfinder/data/out " +
             "--gold " +
+            "--method 2 " +
+            "--debug";
+
+ static String testNafClinkParameters = "--clinks /Code/vu/ceopathfinder/pathfinder/data/nwr-clinks " +
+            "--input /Code/vu/ceopathfinder/pathfinder/data/gold " +
+            "--output /Code/vu/ceopathfinder/pathfinder/data/out " +
+            "--gold " +
+            "--method 3 " +
+            "--debug";
+
+ static String testFrameNetParameters = "--fn-relations /Resources/FrameNet/fndata-1.7/frRelation.xml " +
+            "--fn-lexicon /Resources/FrameNet/fndata-1.7/luIndex.xml " +
+            "--input /Code/vu/ceopathfinder/pathfinder/data/gold " +
+            "--output /Code/vu/ceopathfinder/pathfinder/data/out " +
+            "--gold " +
+            "--method 4 " +
             "--debug";
 
     static public void main (String[] args) {
@@ -48,9 +58,21 @@ public class MentionReader {
         String mentionFolder = "";
         String outputFolder = "";
         String chainpath = "";
+        String clinkpath = "";
+        String fnRelationsPath = "";
+        String fnLexiconPath = "";
+
+        //// CEO properties depth and rule
+        Integer depth = 0;
+        Integer rule = 0; // 0 = full assertion, 1 = property, 2 = subject-property, 3 = subject - property - object
+        Integer threshold = 1;
+        Integer intermediate = 0;
+
         if (args.length==0) {
             //args = testCeoParameters.split(" ");
-            args = testNCParameters.split(" ");
+            //args = testNarrativeChainParameters.split(" ");
+            //args = testNafClinkParameters.split(" ");
+            args = testFrameNetParameters.split(" ");
         }
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
@@ -65,17 +87,18 @@ public class MentionReader {
             else if (arg.equalsIgnoreCase("--ceo-ontology") && args.length>(i+1)){
                 pathToCeo = args[i+1];
             }
-            else if (arg.equalsIgnoreCase("--chains") && args.length>(i+1)){
-                chainpath = args[i+1];
-            }
             else if (arg.equalsIgnoreCase("--ontology-depth") && args.length>(i+1)){
-                deep = Integer.parseInt(args[i+1]);
+                depth = Integer.parseInt(args[i+1]);
             }
             else if (arg.equalsIgnoreCase("--rule") && args.length>(i+1)){
                 rule = Integer.parseInt(args[i+1]);
             }
             else if (arg.equalsIgnoreCase("--property-threshold") && args.length>(i+1)){
                 threshold = Integer.parseInt(args[i+1]);
+            }
+
+            else if (arg.equalsIgnoreCase("--intermediate") && args.length>(i+1)){
+                intermediate = Integer.parseInt(args[i+1]);
             }
             else if (arg.equalsIgnoreCase("--input") && args.length>(i+1)){
                 mentionFolder = args[i+1];
@@ -87,8 +110,17 @@ public class MentionReader {
                     out.mkdir();
                 }
             }
-            else if (arg.equalsIgnoreCase("--intermediate") && args.length>(i+1)){
-                intermediate = Integer.parseInt(args[i+1]);
+            else if (arg.equalsIgnoreCase("--chains") && args.length>(i+1)){
+                chainpath = args[i+1];
+            }
+            else if (arg.equalsIgnoreCase("--clinks") && args.length>(i+1)){
+                clinkpath = args[i+1];
+            }
+            else if (arg.equalsIgnoreCase("--fn-relations") && args.length>(i+1)){
+                fnRelationsPath = args[i+1];
+            }
+            else if (arg.equalsIgnoreCase("--fn-lexicon") && args.length>(i+1)){
+                fnLexiconPath = args[i+1];
             }
             else if (arg.equalsIgnoreCase("--debug")){
                 DEBUG = true;
@@ -102,11 +134,13 @@ public class MentionReader {
 
         if (METHOD==1) {
             if (!pathToCeo.isEmpty() && !lexiconPath.isEmpty()) {
-                ceoPathFinder.readLexiconFile(new File(lexiconPath));
-                ceoPathFinder.readOwlFile(pathToCeo);
-                ceoPathFinder.setDuring(true);
-                ceoPathFinder.setRule(0); //// property predicate only
-                ceoPathFinder.setInheritanceDepth(deep);
+                CeoMatching.ceoPathFinder.readLexiconFile(new File(lexiconPath));
+                CeoMatching.ceoPathFinder.readOwlFile(pathToCeo);
+                CeoMatching.ceoPathFinder.setDuring(true);
+                CeoMatching.ceoPathFinder.setRule(rule);
+                CeoMatching.ceoPathFinder.setInheritanceDepth(depth);
+                CeoMatching.ceoPathFinder.setIntermediate(intermediate);
+                CeoMatching.ceoPathFinder.setThreshold(threshold);
             }
             else {
                 if (pathToCeo.isEmpty()) System.err.println("No CEO ontology provided");
@@ -115,13 +149,36 @@ public class MentionReader {
         }
         else if (METHOD==2) {
             if (!chainpath.isEmpty() && METHOD == 2) {
-                chains = NarrativeChains.getNarrativeChains(chainpath);
-                verbs = NarrativeChains.buildVerbIndex(chains);
-                System.out.println("chains.size() = " + chains.size());
-                System.out.println("verbs.size() = " + verbs.size());
+                NarrativeChainMatching.getNarrativeChains(chainpath);
+                NarrativeChainMatching.buildVerbIndex();
+                System.out.println("chains.size() = " + NarrativeChainMatching.chains.size());
+                System.out.println("verbs.size() = " + NarrativeChainMatching.verbs.size());
             }
             else {
                 System.err.println("No narrative chains provided");
+            }
+        }
+        else if (METHOD==3) {
+            if (!clinkpath.isEmpty()) {
+                NafClinkMatching.clinks = NafClinks.getClinks(clinkpath);
+                System.out.println("clinks.size() = " + NafClinkMatching.clinks.size());
+            }
+            else {
+                System.err.println("No clinks folder provided");
+            }
+        }
+        else if (METHOD==4) {
+            if (fnRelationsPath.isEmpty()) {
+                System.out.println("No FrameNet relation provided");
+            }
+            if (fnLexiconPath.isEmpty()) {
+                System.out.println("No FrameNet relation provided");
+            }
+            if (!fnRelationsPath.isEmpty() && !fnLexiconPath.isEmpty()) {
+                FrameNetMatching.frameNetReader.parseFile(fnRelationsPath);
+                FrameNetMatching.frameNetLuReader.parseFile(fnLexiconPath);
+                System.out.println("FrameNetMatching.frameNetReader.clinks.size() = " + FrameNetMatching.frameNetReader.clinks.size());
+                System.out.println("FrameNetMatching.frameNetLuReader.lexicalUnitFrameMap.size() = " + FrameNetMatching.frameNetLuReader.lexicalUnitFrameMap.size());
             }
         }
         else {
@@ -145,7 +202,7 @@ public class MentionReader {
 
             /////// BASELINE //////////////
             if (METHOD ==0) {
-                String ceoResultB1 = sameSentenceMentionBaselineMatch(mentions);
+                String ceoResultB1 = BaseLineMatching.sameSentenceMentionBaselineMatch(mentions);
                 try {
                     OutputStream fos = new FileOutputStream(outputFolder+"/"+file.getName() + ".bl1S");
                     fos.write(ceoResultB1.getBytes());
@@ -154,7 +211,7 @@ public class MentionReader {
                     e.printStackTrace();
                 }
 
-                String ceoResultB3 = twoSentenceMentionBaselineMatch(mentions);
+                String ceoResultB3 = BaseLineMatching.twoSentenceMentionBaselineMatch(mentions);
                 try {
                     OutputStream fos = new FileOutputStream(outputFolder+"/"+file.getName() + ".bl3S");
                     fos.write(ceoResultB3.getBytes());
@@ -162,7 +219,7 @@ public class MentionReader {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                String ceoResultB5 = fourSentenceMentionBaselineMatch(mentions);
+                String ceoResultB5 = BaseLineMatching.fourSentenceMentionBaselineMatch(mentions);
                 try {
                     OutputStream fos = new FileOutputStream(outputFolder+"/"+file.getName() + ".bl5S");
                     fos.write(ceoResultB5.getBytes());
@@ -170,7 +227,7 @@ public class MentionReader {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                String ceoResultBAny = allMentionBaselineMatch(mentions);
+                String ceoResultBAny = BaseLineMatching.allMentionBaselineMatch(mentions);
                 try {
                     OutputStream fos = new FileOutputStream(outputFolder+"/"+file.getName() + ".blANY");
                     fos.write(ceoResultBAny.getBytes());
@@ -180,7 +237,7 @@ public class MentionReader {
                 }
              }
              else if (METHOD==1) {  /// CEO
-                 String ceoResultAny = anyMentionCeoMatch(mentions, threshold);
+                 String ceoResultAny = CeoMatching.anyMentionCeoMatch(mentions);
                  try {
                      OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".ceoANY");
                      fos.write(ceoResultAny.getBytes());
@@ -189,7 +246,7 @@ public class MentionReader {
                      e.printStackTrace();
                  }
 
-                 String ceoResult1 = sameSentenceMentionCeoMatch(mentions, threshold);
+                 String ceoResult1 = CeoMatching.sameSentenceMentionCeoMatch(mentions);
                  try {
                      OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".ceo1S");
                      fos.write(ceoResult1.getBytes());
@@ -198,7 +255,7 @@ public class MentionReader {
                      e.printStackTrace();
                  }
 
-                 String ceoResult3 = twoSentenceMentionCeoMatch(mentions, threshold);
+                 String ceoResult3 = CeoMatching.twoSentenceMentionCeoMatch(mentions);
                  try {
                      OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".ceo3S");
                      fos.write(ceoResult3.getBytes());
@@ -206,7 +263,7 @@ public class MentionReader {
                  } catch (IOException e) {
                      e.printStackTrace();
                  }
-                 String ceoResult5 = fourSentenceMentionCeoMatch(mentions, threshold);
+                 String ceoResult5 = CeoMatching.fourSentenceMentionCeoMatch(mentions);
                  try {
                      OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".ceo5S");
                      fos.write(ceoResult5.getBytes());
@@ -215,8 +272,8 @@ public class MentionReader {
                      e.printStackTrace();
                  }
              }
-             else if (METHOD == 2) {  /// NarrativeChains
-                 String ceoResultAny = anyMentionNarrativeChainMatch(mentions, threshold);
+             else if (METHOD == 2) {  /// NarrativeChainMatching
+                 String ceoResultAny = NarrativeChainMatching.anyMentionNarrativeChainMatch(mentions);
                  try {
                      OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".ncANY");
                      fos.write(ceoResultAny.getBytes());
@@ -225,7 +282,7 @@ public class MentionReader {
                      e.printStackTrace();
                  }
 
-                 String ceoResult1 = sameSentenceMentionNarrativeChainMatch(mentions, threshold);
+                 String ceoResult1 = NarrativeChainMatching.sameSentenceMentionNarrativeChainMatch(mentions);
                  try {
                      OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".nc1S");
                      fos.write(ceoResult1.getBytes());
@@ -234,7 +291,7 @@ public class MentionReader {
                      e.printStackTrace();
                  }
 
-                 String ceoResult3 = twoSentenceMentionNarrativeChainMatch(mentions, threshold);
+                 String ceoResult3 = NarrativeChainMatching.twoSentenceMentionNarrativeChainMatch(mentions);
                  try {
                      OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".nc3S");
                      fos.write(ceoResult3.getBytes());
@@ -242,7 +299,7 @@ public class MentionReader {
                  } catch (IOException e) {
                      e.printStackTrace();
                  }
-                 String ceoResult5 = fourSentenceMentionNarrativeChainMatch(mentions, threshold);
+                 String ceoResult5 = NarrativeChainMatching.fourSentenceMentionNarrativeChainMatch(mentions);
                  try {
                      OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".nc5S");
                      fos.write(ceoResult5.getBytes());
@@ -252,53 +309,81 @@ public class MentionReader {
                  }
              }
              else if (METHOD==3) { //FBK PRO cause
+                 String ceoResultAny = NafClinkMatching.anyMentionNafClinkMatch(mentions, file.getName());
+                 try {
+                     OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".nafclANY");
+                     fos.write(ceoResultAny.getBytes());
+                     fos.close();
+                 } catch (IOException e) {
+                     e.printStackTrace();
+                 }
 
+                 String ceoResult1 = NafClinkMatching.sameSentenceMentionNarrativeChainMatch(mentions, file.getName());
+                 try {
+                     OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".nafcl1S");
+                     fos.write(ceoResult1.getBytes());
+                     fos.close();
+                 } catch (IOException e) {
+                     e.printStackTrace();
+                 }
+
+                 String ceoResult3 = NafClinkMatching.twoSentenceMentionNarrativeChainMatch(mentions, file.getName());
+                 try {
+                     OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".nafcl3S");
+                     fos.write(ceoResult3.getBytes());
+                     fos.close();
+                 } catch (IOException e) {
+                     e.printStackTrace();
+                 }
+                 String ceoResult5 = NafClinkMatching.fourSentenceMentionNarrativeChainMatch( mentions, file.getName());
+                 try {
+                     OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".nafcl5S");
+                     fos.write(ceoResult5.getBytes());
+                     fos.close();
+                 } catch (IOException e) {
+                     e.printStackTrace();
+                 }
              }
              else if (METHOD==4) { //FrameNet cause
+                String ceoResultAny = FrameNetMatching.anyMentionFrameNetMatch( mentions);
+                try {
+                    OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".fnANY");
+                    fos.write(ceoResultAny.getBytes());
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
+                String ceoResult1 = FrameNetMatching.sameSentenceMentionFrameNetMatch( mentions);
+                try {
+                    OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".fn1S");
+                    fos.write(ceoResult1.getBytes());
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                String ceoResult3 = FrameNetMatching.twoSentenceMentionFrameNetMatch( mentions);
+                try {
+                    OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".fn3S");
+                    fos.write(ceoResult3.getBytes());
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                String ceoResult5 = FrameNetMatching.fourSentenceMentionFrameNetMatch( mentions);
+                try {
+                    OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".fn5S");
+                    fos.write(ceoResult5.getBytes());
+                    fos.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
              }
          }
-
-/*        for (Map.Entry<String, Integer> entry : OOV.entrySet()) {
-            System.out.println(entry.getKey() + " : " + entry.getValue());
-         }*/
-
     }
  
-    //22	6:0:died	921:47:buried	HCPE	112	56	[false#undergoer#exist, true#part#isDamaged, undergoer#hasPart#part, damage#hasNegativeEffectOn#activity, undergoer#hasDamage#damage, true#undergoer#isDamaged, side_1#inConflictWith#side_2, side_1#hasIssue#issue, side_1#atPlace#place, true#side_1#inMeeting, true#side_2#inConflict, true#side_1#inConflict, side_1#hasPurpose#purpose, true#translocation-theme#inMotion, translocation-theme#uses#place, false#place#inFunction, translocation-theme#atPlace#place, false#translocation-theme#inMotion, true#place#isBlocked, entity#atPlace#place, translocation-theme#notAtPlace#place, convict#committedOffense#offense, convict#hasConviction#conviction, true#convict#isConvicted, true#convict#inCaptivity, value-attribute#hasValue#value, true#entity#exist, false#place#isBlocked, true#place#inFunction, translocation-theme#notUses#place, agent#blocks#place, agent#hasPurpose#purpose, true#partners#inCollaboration, partners#hasProject#project, partner_1#collaboratesWith#partner_2, true#partners#inRelationship, partner_1#inRelationshipWith#partner_2, true#employee#isEmployed, employment-attribute#hasValue#employment-value, employee#hasAttribute#employment-attribute, employee#hasTask#employment-task, employee#hasFunction#employment-function, employee#employedAt#employer, suspect#suspectedOfOffense#offense, agent#examines#suspect, agent#examines#offense, true#leader-entity#isLeader, leader-entity#hasFunction#leader-function, leader-entity#isLeaderOf#leader-governed_entity, meeting-participant#atPlace#place, true#meeting-participant#inMeeting, suspect#notAtPlace#place, suspect#isChargedOf#offense, true#suspect#inCaptivity, suspect#atPlace#place]
-     //32	921:47:buried	6:0:died	HCPE	56	112	[false#undergoer#exist, true#part#isDamaged, undergoer#hasPart#part, damage#hasNegativeEffectOn#activity, undergoer#hasDamage#damage, true#undergoer#isDamaged, side_1#inConflictWith#side_2, side_1#hasIssue#issue, side_1#atPlace#place, true#side_1#inMeeting, true#side_2#inConflict, true#side_1#inConflict, side_1#hasPurpose#purpose, true#translocation-theme#inMotion, translocation-theme#uses#place, false#place#inFunction, translocation-theme#atPlace#place, false#translocation-theme#inMotion, true#place#isBlocked, entity#atPlace#place, translocation-theme#notAtPlace#place, convict#committedOffense#offense, convict#hasConviction#conviction, true#convict#isConvicted, true#convict#inCaptivity, value-attribute#hasValue#value, true#entity#exist, false#place#isBlocked, true#place#inFunction, translocation-theme#notUses#place, agent#blocks#place, agent#hasPurpose#purpose, true#partners#inCollaboration, partners#hasProject#project, partner_1#collaboratesWith#partner_2, true#partners#inRelationship, partner_1#inRelationshipWith#partner_2, true#employee#isEmployed, employment-attribute#hasValue#employment-value, employee#hasAttribute#employment-attribute, employee#hasTask#employment-task, employee#hasFunction#employment-function, employee#employedAt#employer, suspect#suspectedOfOffense#offense, agent#examines#suspect, agent#examines#offense, true#leader-entity#isLeader, leader-entity#hasFunction#leader-function, leader-entity#isLeaderOf#leader-governed_entity, meeting-participant#atPlace#place, true#meeting-participant#inMeeting, suspect#notAtPlace#place, suspect#isChargedOf#offense, true#suspect#inCaptivity, suspect#atPlace#place]
 
-    static void addCeoResult(HashMap<String, ArrayList<String>> keyResults, Mention mention1, Mention mention2) {
-        ArrayList<String> mention1Classes = ceoPathFinder.ceoLexicon.get(mention1.getWord().toLowerCase());
-        ArrayList<String> mention2Classes = ceoPathFinder.ceoLexicon.get(mention2.getWord().toLowerCase());
-        ArrayList<String> matches1 = ceoPathFinder.pathValuesForTypes(mention1Classes, mention2Classes, intermediate);
-        ArrayList<String> matches2 = ceoPathFinder.pathValuesForTypes(mention2Classes, mention1Classes, intermediate);
-        String str = "";
-        String key = "";
-       // System.out.println("DEBUG = " + DEBUG);
-        if (matches1.size() > matches2.size()) {
-            key = mention1.toString() + mention2.toString();
-            str = mention1.toString() + "\t" + mention2.toString() + "\tHCPE";
-            str += "\t"  + matches1.toString();
-        }
-        else if (matches2.size() > matches1.size()) {
-            key = mention2.toString() + mention1.toString();
-            str = mention2.toString() + "\t" + mention1.toString() + "\tHCPE";
-            str += "\t" + matches2.toString();
-        }
-        //// token fallback
-        else if (mention1.getToken() < mention2.getToken()) {
-            key = mention1.toString() + mention2.toString();
-            str = mention1.toString() + "\t" + mention2.toString() + "\tHCPE";
-            str += "\t" + matches1.toString();
-        }
-        else if (mention2.getToken() < mention1.getToken()) {
-            key = mention2.toString() + mention1.toString();
-            str = mention2.toString() + "\t" + mention1.toString() + "\tHCPE";
-            str += "\t" + matches2.toString();
-        }
-        addResult(keyResults, mention1, mention2, str, key);
-    }
 
     static void addResult (HashMap<String, ArrayList<String>> keyResults,
                            Mention mention1,
@@ -331,47 +416,9 @@ public class MentionReader {
         }
     }
 
-    static void addNarrativeChainResult(HashMap<String, ArrayList<String>> keyResults,
-                                        Mention mention1,
-                                        Mention mention2,
-                                        String chainId) {
-        String str = "";
-        String key = "";
-        String chain = chains.get(chainId).eventLemmas.toString();
-       // System.out.println("DEBUG = " + DEBUG);
-        //// token fallback
-        if (mention1.getToken() < mention2.getToken()) {
-            key = mention1.toString() + mention2.toString();
-            str = mention1.toString() + "\t" + mention2.toString() + "\tHCPE";
-            str += "\t" + chain;
-        }
-        else if (mention2.getToken() < mention1.getToken()) {
-            key = mention2.toString() + mention1.toString();
-            str = mention2.toString() + "\t" + mention1.toString() + "\tHCPE";
-            str += "\t" + chain;
-        }
-        addResult(keyResults, mention1, mention2, str, key);
-    }
 
-    static void addBaselineResult(HashMap<String, ArrayList<String>> keyResults,
-                                        Mention mention1,
-                                        Mention mention2) {
-        String str = "";
-        String key = "";
-       // System.out.println("DEBUG = " + DEBUG);
-        //// token fallback
-        if (mention1.getToken() < mention2.getToken()) {
-            key = mention1.toString() + mention2.toString();
-            str = mention1.toString() + "\t" + mention2.toString() + "\tHCPE";
-            str += "\t" + "BASELINE";
-        }
-        else if (mention2.getToken() < mention1.getToken()) {
-            key = mention2.toString() + mention1.toString();
-            str = mention2.toString() + "\t" + mention1.toString() + "\tHCPE";
-            str += "\t" + "BASELINE";
-        }
-        addResult(keyResults, mention1, mention2, str, key);
-    }
+
+
 
     static String getSharedInstance (String m1, String m2) {
         String instance = "-1";
@@ -436,348 +483,6 @@ public class MentionReader {
         }
        return total;
     }
-
-
-    static String anyMentionCeoMatch (ArrayList<Mention> mentions, Integer threshold) {
-        String result = "";
-        HashMap<String, ArrayList<String>> keyResults = new HashMap<String, ArrayList<String>>();
-        for (int i = 0; i < mentions.size(); i++) {
-            Mention mention1 = mentions.get(i);
-            if (ceoPathFinder.ceoLexicon.containsKey(mention1.getWord().toLowerCase())) {
-                for (int j = 0; j < mentions.size(); j++) {
-                    Mention mention2 = mentions.get(j);
-                    if (!mention1.getTokenString().equals(mention2.getTokenString()) &&
-                            !mention1.getWord().equalsIgnoreCase(mention2.getWord())) {
-                        if (ceoPathFinder.areCircumstantial(mention1.getWord(), mention2.getWord(), intermediate, threshold)) {
-                            addCeoResult(keyResults, mention1, mention2);
-                        }
-                        else {
-                          //  System.out.println("OoV mention2.getWord() = " + mention2.getWord());
-                        }
-                    }
-                }
-            }
-            else {
-                if (OOV.containsKey(mention1.getWord())) {
-                    Integer cnt = OOV.get(mention1.getWord());
-                    cnt++;
-                    OOV.put(mention1.getWord(), cnt);
-                }
-                else {
-                    OOV.put(mention1.getWord(), 1);
-                }
-              //  System.out.println("OoV mention1.getWord() = " + mention1.getWord());
-            }
-        }
-
-        result = makeResult (keyResults);
-
-        return result;
-    }
-
-    static String sameSentenceMentionCeoMatch (ArrayList<Mention> mentions, Integer threshold) {
-        String result = "";
-        HashMap<String, ArrayList<String>> keyResults = new HashMap<String, ArrayList<String>>();
-        for (int i = 0; i < mentions.size(); i++) {
-            Mention mention1 = mentions.get(i);
-            if (ceoPathFinder.ceoLexicon.containsKey(mention1.getWord().toLowerCase())) {
-                for (int j = 0; j < mentions.size(); j++) {
-                    Mention mention2 = mentions.get(j);
-                    if (mention1.getSentence()==mention2.getSentence()) {
-                        if (!mention1.getTokenString().equals(mention2.getTokenString()) &&
-                                !mention1.getWord().equalsIgnoreCase(mention2.getWord())) {
-                            if (ceoPathFinder.areCircumstantial(mention1.getWord(), mention2.getWord(), intermediate, threshold)) {
-                                addCeoResult(keyResults, mention1, mention2);
-                            }
-                            else {
-                              //  System.out.println("OoV mention2.getWord() = " + mention2.getWord());
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        result = makeResult (keyResults);
-        return result;
-    }
-
-    static String twoSentenceMentionCeoMatch (ArrayList<Mention> mentions, Integer threshold) {
-        String result = "";
-        HashMap<String, ArrayList<String>> keyResults = new HashMap<String, ArrayList<String>>();
-        for (int i = 0; i < mentions.size(); i++) {
-            Mention mention1 = mentions.get(i);
-            if (ceoPathFinder.ceoLexicon.containsKey(mention1.getWord().toLowerCase())) {
-                for (int j = 0; j < mentions.size(); j++) {
-                    Mention mention2 = mentions.get(j);
-                    if (mention1.getSentence()==mention2.getSentence() ||
-                            mention1.getSentence()==mention2.getSentence()-1 ||
-                            mention1.getSentence()==mention2.getSentence()+1
-                            ) {
-                        if (!mention1.getTokenString().equals(mention2.getTokenString()) &&
-                                !mention1.getWord().equalsIgnoreCase(mention2.getWord())) {
-                            if (ceoPathFinder.areCircumstantial(mention1.getWord(), mention2.getWord(), intermediate, threshold)) {
-                                addCeoResult(keyResults, mention1, mention2);
-                            }
-                            else {
-                              //  System.out.println("OoV mention2.getWord() = " + mention2.getWord());
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        result = makeResult (keyResults);
-        return result;
-    }
-
-    static String fourSentenceMentionCeoMatch (ArrayList<Mention> mentions, Integer threshold) {
-         String result = "";
-        HashMap<String, ArrayList<String>> keyResults = new HashMap<String, ArrayList<String>>();
-         for (int i = 0; i < mentions.size(); i++) {
-             Mention mention1 = mentions.get(i);
-             if (ceoPathFinder.ceoLexicon.containsKey(mention1.getWord().toLowerCase())) {
-                 for (int j = 0; j < mentions.size(); j++) {
-                     Mention mention2 = mentions.get(j);
-                     if (mention1.getSentence()==mention2.getSentence() ||
-                             mention1.getSentence()==mention2.getSentence()-1 ||
-                             mention1.getSentence()==mention2.getSentence()+1 ||
-                             mention1.getSentence()==mention2.getSentence()-2 ||
-                             mention1.getSentence()==mention2.getSentence()+2 ||
-                             mention1.getSentence()==mention2.getSentence()-3 ||
-                             mention1.getSentence()==mention2.getSentence()+3
-
-                             ) {
-                         if (!mention1.getTokenString().equals(mention2.getTokenString()) &&
-                                 !mention1.getWord().equalsIgnoreCase(mention2.getWord())) {
-                             if (ceoPathFinder.areCircumstantial(mention1.getWord(), mention2.getWord(), intermediate, threshold)) {
-                                 addCeoResult(keyResults, mention1, mention2);
-                             }
-                             else {
-                               //  System.out.println("OoV mention2.getWord() = " + mention2.getWord());
-                             }
-                         }
-                     }
-                 }
-             }
-         }
-         result = makeResult (keyResults);
-         return result;
-     }
-
-     static String anyMentionNarrativeChainMatch (ArrayList<Mention> mentions, Integer threshold) {
-        String result = "";
-        HashMap<String, ArrayList<String>> keyResults = new HashMap<String, ArrayList<String>>();
-        for (int i = 0; i < mentions.size(); i++) {
-            Mention mention1 = mentions.get(i);
-            if (verbs.containsKey(mention1.getWord().toLowerCase())) {
-                for (int j = 0; j < mentions.size(); j++) {
-                    Mention mention2 = mentions.get(j);
-                    if (!mention1.getTokenString().equals(mention2.getTokenString()) &&
-                            !mention1.getWord().equalsIgnoreCase(mention2.getWord())) {
-                        if (verbs.containsKey(mention2.getWord().toLowerCase())) {
-                            ArrayList<String> ids1 = verbs.get(mention1.getWord().toLowerCase());
-                            ArrayList<String> ids2 = verbs.get(mention2.getWord().toLowerCase());
-                            for (int k = 0; k < ids1.size(); k++) {
-                                String id = ids1.get(k);
-                                if (ids2.contains(id)) {
-                                    addNarrativeChainResult(keyResults, mention1, mention2, id);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        result = makeResult (keyResults);
-
-        return result;
-    }
-
-    static String sameSentenceMentionNarrativeChainMatch (ArrayList<Mention> mentions, Integer threshold) {
-        String result = "";
-        HashMap<String, ArrayList<String>> keyResults = new HashMap<String, ArrayList<String>>();
-        for (int i = 0; i < mentions.size(); i++) {
-            Mention mention1 = mentions.get(i);
-            if (verbs.containsKey(mention1.getWord().toLowerCase())) {
-                for (int j = 0; j < mentions.size(); j++) {
-                    Mention mention2 = mentions.get(j);
-                    if (mention1.getSentence()==mention2.getSentence()) {
-                        if (!mention1.getTokenString().equals(mention2.getTokenString()) &&
-                                !mention1.getWord().equalsIgnoreCase(mention2.getWord())) {
-                            if (verbs.containsKey(mention2.getWord().toLowerCase())) {
-                                ArrayList<String> ids1 = verbs.get(mention1.getWord().toLowerCase());
-                                ArrayList<String> ids2 = verbs.get(mention2.getWord().toLowerCase());
-                                for (int k = 0; k < ids1.size(); k++) {
-                                    String id = ids1.get(k);
-                                    if (ids2.contains(id)) {
-                                        addNarrativeChainResult(keyResults, mention1, mention2, id);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        result = makeResult (keyResults);
-        return result;
-    }
-
-    static String twoSentenceMentionNarrativeChainMatch (ArrayList<Mention> mentions, Integer threshold) {
-        String result = "";
-        HashMap<String, ArrayList<String>> keyResults = new HashMap<String, ArrayList<String>>();
-        for (int i = 0; i < mentions.size(); i++) {
-            Mention mention1 = mentions.get(i);
-            if (verbs.containsKey(mention1.getWord().toLowerCase())) {
-                for (int j = 0; j < mentions.size(); j++) {
-                    Mention mention2 = mentions.get(j);
-                    if (mention1.getSentence()==mention2.getSentence() ||
-                            mention1.getSentence()==mention2.getSentence()-1 ||
-                            mention1.getSentence()==mention2.getSentence()+1
-                            ) {
-                        if (!mention1.getTokenString().equals(mention2.getTokenString()) &&
-                                !mention1.getWord().equalsIgnoreCase(mention2.getWord())) {
-                            if (verbs.containsKey(mention2.getWord().toLowerCase())) {
-                                ArrayList<String> ids1 = verbs.get(mention1.getWord().toLowerCase());
-                                ArrayList<String> ids2 = verbs.get(mention2.getWord().toLowerCase());
-                                for (int k = 0; k < ids1.size(); k++) {
-                                    String id = ids1.get(k);
-                                    if (ids2.contains(id)) {
-                                        addNarrativeChainResult(keyResults, mention1, mention2, id);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        result = makeResult (keyResults);
-        return result;
-    }
-
-    static String fourSentenceMentionNarrativeChainMatch (ArrayList<Mention> mentions, Integer threshold) {
-         String result = "";
-         HashMap<String, ArrayList<String>> keyResults = new HashMap<String, ArrayList<String>>();
-         for (int i = 0; i < mentions.size(); i++) {
-             Mention mention1 = mentions.get(i);
-             if (verbs.containsKey(mention1.getWord().toLowerCase())) {
-                 for (int j = 0; j < mentions.size(); j++) {
-                     Mention mention2 = mentions.get(j);
-                     if (mention1.getSentence()==mention2.getSentence() ||
-                             mention1.getSentence()==mention2.getSentence()-1 ||
-                             mention1.getSentence()==mention2.getSentence()+1 ||
-                             mention1.getSentence()==mention2.getSentence()-2 ||
-                             mention1.getSentence()==mention2.getSentence()+2 ||
-                             mention1.getSentence()==mention2.getSentence()-3 ||
-                             mention1.getSentence()==mention2.getSentence()+3
-
-                             ) {
-                         if (!mention1.getTokenString().equals(mention2.getTokenString()) &&
-                                 !mention1.getWord().equalsIgnoreCase(mention2.getWord())) {
-                             if (verbs.containsKey(mention2.getWord().toLowerCase())) {
-                                 ArrayList<String> ids1 = verbs.get(mention1.getWord().toLowerCase());
-                                 ArrayList<String> ids2 = verbs.get(mention2.getWord().toLowerCase());
-                                 for (int k = 0; k < ids1.size(); k++) {
-                                     String id = ids1.get(k);
-                                     if (ids2.contains(id)) {
-                                         addNarrativeChainResult(keyResults, mention1, mention2, id);
-                                     }
-                                 }
-                             }
-                         }
-                     }
-                 }
-             }
-         }
-         result = makeResult (keyResults);
-         return result;
-     }
-
-    static String sameSentenceMentionBaselineMatch (ArrayList<Mention> mentions) {
-        String result = "";
-        HashMap<String, ArrayList<String>> keyResults = new HashMap<String, ArrayList<String>>();
-        for (int i = 0; i < mentions.size(); i++) {
-            Mention mention1 = mentions.get(i);
-            for (int j = 0; j < mentions.size(); j++) {
-                Mention mention2 = mentions.get(j);
-                if (mention1.getSentence()==mention2.getSentence()
-                        ) {
-                    if (!mention1.getTokenString().equals(mention2.getTokenString()) &&
-                            !mention1.getWord().equalsIgnoreCase(mention2.getWord())) {
-                        addBaselineResult(keyResults, mention1, mention2);
-                    }
-                }
-            }
-        }
-        result = makeResult (keyResults);
-        return result;
-    }
-
-    static String twoSentenceMentionBaselineMatch (ArrayList<Mention> mentions) {
-        String result = "";
-        HashMap<String, ArrayList<String>> keyResults = new HashMap<String, ArrayList<String>>();
-        for (int i = 0; i < mentions.size(); i++) {
-            Mention mention1 = mentions.get(i);
-            for (int j = 0; j < mentions.size(); j++) {
-                Mention mention2 = mentions.get(j);
-                if (mention1.getSentence()==mention2.getSentence() ||
-                        mention1.getSentence()==mention2.getSentence()-1 ||
-                        mention1.getSentence()==mention2.getSentence()+1
-                        ) {
-                    if (!mention1.getTokenString().equals(mention2.getTokenString()) &&
-                            !mention1.getWord().equalsIgnoreCase(mention2.getWord())) {
-                        addBaselineResult(keyResults, mention1, mention2);
-                    }
-                }
-            }
-        }
-        result = makeResult (keyResults);
-        return result;
-    }
-
-    static String fourSentenceMentionBaselineMatch (ArrayList<Mention> mentions) {
-        String result = "";
-        HashMap<String, ArrayList<String>> keyResults = new HashMap<String, ArrayList<String>>();
-        for (int i = 0; i < mentions.size(); i++) {
-            Mention mention1 = mentions.get(i);
-            for (int j = 0; j < mentions.size(); j++) {
-                Mention mention2 = mentions.get(j);
-                if (mention1.getSentence()==mention2.getSentence() ||
-                        mention1.getSentence()==mention2.getSentence()-1 ||
-                        mention1.getSentence()==mention2.getSentence()+1 ||
-                        mention1.getSentence()==mention2.getSentence()-2 ||
-                        mention1.getSentence()==mention2.getSentence()+2
-                        ) {
-                    if (!mention1.getTokenString().equals(mention2.getTokenString()) &&
-                            !mention1.getWord().equalsIgnoreCase(mention2.getWord())) {
-                        addBaselineResult(keyResults, mention1, mention2);
-                    }
-                }
-            }
-        }
-        result = makeResult (keyResults);
-        return result;
-    }
-
-    static String allMentionBaselineMatch (ArrayList<Mention> mentions) {
-        String result = "";
-        HashMap<String, ArrayList<String>> keyResults = new HashMap<String, ArrayList<String>>();
-        for (int i = 0; i < mentions.size(); i++) {
-            Mention mention1 = mentions.get(i);
-            for (int j = 0; j < mentions.size(); j++) {
-                Mention mention2 = mentions.get(j);
-                if (!mention1.getTokenString().equals(mention2.getTokenString()) &&
-                        !mention1.getWord().equalsIgnoreCase(mention2.getWord())) {
-                    addBaselineResult(keyResults, mention1, mention2);
-                }
-            }
-        }
-        result = makeResult (keyResults);
-        return result;
-    }
-
 
 
 
