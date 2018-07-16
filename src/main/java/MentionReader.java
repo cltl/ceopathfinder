@@ -311,7 +311,7 @@ public class MentionReader {
              else if (METHOD==3) { //FBK PRO cause
                  String ceoResultAny = NafClinkMatching.anyMentionNafClinkMatch(mentions, file.getName());
                  try {
-                     OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".nafclANY");
+                     OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".fbkclANY");
                      fos.write(ceoResultAny.getBytes());
                      fos.close();
                  } catch (IOException e) {
@@ -320,7 +320,7 @@ public class MentionReader {
 
                  String ceoResult1 = NafClinkMatching.sameSentenceMentionNarrativeChainMatch(mentions, file.getName());
                  try {
-                     OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".nafcl1S");
+                     OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".fbkcl1S");
                      fos.write(ceoResult1.getBytes());
                      fos.close();
                  } catch (IOException e) {
@@ -329,7 +329,7 @@ public class MentionReader {
 
                  String ceoResult3 = NafClinkMatching.twoSentenceMentionNarrativeChainMatch(mentions, file.getName());
                  try {
-                     OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".nafcl3S");
+                     OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".fbkcl3S");
                      fos.write(ceoResult3.getBytes());
                      fos.close();
                  } catch (IOException e) {
@@ -337,7 +337,7 @@ public class MentionReader {
                  }
                  String ceoResult5 = NafClinkMatching.fourSentenceMentionNarrativeChainMatch( mentions, file.getName());
                  try {
-                     OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".nafcl5S");
+                     OutputStream fos = new FileOutputStream(outputFolder + "/" + file.getName() + ".fbkcl5S");
                      fos.write(ceoResult5.getBytes());
                      fos.close();
                  } catch (IOException e) {

@@ -87,10 +87,10 @@ OUT=$BASE/data/out-naf-clinks
 
 java -Xmx812m -cp $BIN MentionReader --method 3 --clinks $CLINKS --input $IN --output $OUT --$EXPAND
 
-python eval_script-20180323.py $IN $OUT .eval.nafcl1S > out.eval.nafcl1S
-python eval_script-20180323.py $IN $OUT .eval.nafcl3S > out.eval.nafcl3S
-python eval_script-20180323.py $IN $OUT .eval.nafcl5S > out.eval.nafcl5S
-python eval_script-20180323.py $IN $OUT .eval.nafclANY > out.eval.nafclANY
+python eval_script-20180323.py $IN $OUT .eval.fbkcl1S > out.eval.fbkcl1S
+python eval_script-20180323.py $IN $OUT .eval.fbkcl3S > out.eval.fbkcl3S
+python eval_script-20180323.py $IN $OUT .eval.fbkcl5S > out.eval.fbkcl5S
+python eval_script-20180323.py $IN $OUT .eval.fbkclANY > out.eval.fbkclANY
 
 # NAF clinks
 OUT=$BASE/data/out-framenet

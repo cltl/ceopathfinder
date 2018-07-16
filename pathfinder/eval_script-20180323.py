@@ -9,7 +9,7 @@ class NotValidEnding(Exception):
 
 def check_score(input_ending):
 
-    file_ending = ['.eval', '.eval.bl1S', '.eval.bl3S', '.eval.bl5S', '.eval.blANY', '.eval.ceo1S', '.eval.ceo3S', '.eval.ceo5S', '.eval.ceoANY', '.eval.nc1S', '.eval.nc3S', '.eval.nc5S', '.eval.ncANY', '.eval.clink1S', '.eval.clink3S', '.eval.clink5S', '.eval.clinkANY', '.eval.fn1S', '.eval.fn3S', '.eval.fn5S', '.eval.fnANY']
+    file_ending = ['.eval', '.eval.bl1S', '.eval.bl3S', '.eval.bl5S', '.eval.blANY', '.eval.ceo1S', '.eval.ceo3S', '.eval.ceo5S', '.eval.ceoANY', '.eval.nc1S', '.eval.nc3S', '.eval.nc5S', '.eval.ncANY', '.eval.fbkcl1S', '.eval.fbkcl3S', '.eval.fbkcl5S', '.eval.fbkclANY', '.eval.fn1S', '.eval.fn3S', '.eval.fn5S', '.eval.fnANY']
 
     if input_ending not in file_ending:
         raise NotValidEnding
@@ -25,7 +25,7 @@ def system_end():
             check_score(ends)
             return ends
         except NotValidEnding:
-            print("Illegal value - system output must ends with one of the following values:  '.eval', '.eval.bl1S', '.eval.bl3S', '.eval.bl5S', 'eval.blANY', .eval.ceo1S','.eval.ceo3S', '.eval.ceo5S', '.eval.ceoANY', .eval.nc1S','.eval.nc3S', '.eval.nc5S', '.eval.ncANY', '.eval.clink1S', '.eval.clink3S', '.eval.clink5S', '.eval.clinkANY', '.eval.fn1S', '.eval.fn3S', '.eval.fn5S', '.eval.fnANY'")
+            print("Illegal value - system output must ends with one of the following values:  '.eval', '.eval.bl1S', '.eval.bl3S', '.eval.bl5S', 'eval.blANY', .eval.ceo1S','.eval.ceo3S', '.eval.ceo5S', '.eval.ceoANY', .eval.nc1S','.eval.nc3S', '.eval.nc5S', '.eval.ncANY', '.eval.fbkcl1S', '.eval.fbkcl3S', '.eval.fbkcl5S', '.eval.fbkclANY', '.eval.fn1S', '.eval.fn3S', '.eval.fn5S', '.eval.fnANY'")
             return system_end()
 
 
