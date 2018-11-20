@@ -565,7 +565,7 @@ public class CeoPathFinder {
                 Statement statement = pI.next();
                 RDFNode object = statement.getObject();
                 String effect = getRuleEffect(object);
-                System.out.println("effect = " + effect);
+               // System.out.println("effect = " + effect);
             }
         }
     }
@@ -722,25 +722,30 @@ public class CeoPathFinder {
         }
     }
 
+    public void printOntology (String classString, String domain) {
+        OntClass myClass = ontologyModel.getOntClass(domain+classString);
+        if (myClass!=null) printHierarchy(myClass, 0);
+    }
+
     public void printOntology (String classString) {
         OntClass myClass = ontologyModel.getOntClass(nwr+classString);
-        printHierarchy(myClass, 0);
+        if (myClass!=null) printHierarchy(myClass, 0);
     }
 
     public void interpretOntology (String classString) {
         OntClass myClass = ontologyModel.getOntClass(nwr+classString);
-        interpretOntology(myClass);
+        if (myClass!=null) interpretOntology(myClass);
     }
 
     public void interpretOntologyWithInheritance (String classString) {
         OntClass myClass = ontologyModel.getOntClass(nwr+classString);
         ArrayList<String> supereffects = new ArrayList<String>();
-        interpretOntology(myClass,supereffects);
+        if (myClass!=null) interpretOntology(myClass,supereffects);
     }
 
     public void interpretOntologyWithParent (String classString) {
         OntClass myClass = ontologyModel.getOntClass(nwr+classString);
-        interpretOntologyOneLevel(myClass, null);
+        if (myClass!=null) interpretOntologyOneLevel(myClass, null);
     }
 
     public ArrayList<String> getPostConditions (OntClass myClass) {
