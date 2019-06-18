@@ -133,7 +133,19 @@ public class CeoPathFinder {
                                 }
                             }
                             if (!types.isEmpty()) {
-                                ceoLexicon.put(word, types);
+                                if (ceoLexicon.containsKey(word)) {
+                                    ArrayList<String> givenTypes = ceoLexicon.get(word);
+                                    for (int i = 0; i < types.size(); i++) {
+                                        String t = types.get(i);
+                                        if (!givenTypes.contains(t)) {
+                                            givenTypes.add(t);
+                                        }
+                                    }
+                                    ceoLexicon.put(word, givenTypes);
+                                }
+                                else {
+                                    ceoLexicon.put(word, types);
+                                }
                             }
                         }
                     }
